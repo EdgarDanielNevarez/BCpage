@@ -230,7 +230,7 @@
 
         // Función para llamar a la API de Gemini con reintentos (exponential backoff)
         async function callGeminiAPI(prompt, retries = 3, delay = 1000) {
-            const apiKey = ""; // Canvas se encargará de la clave
+            const apiKey = "AIzaSyDN1sedF7kbbmK2o9M-hTfJohz60hqLJkw"; // Canvas se encargará de la clave
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
             
             let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
