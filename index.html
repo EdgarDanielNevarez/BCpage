@@ -1,647 +1,732 @@
 <!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BC — Edgar Daniel Chaparro Nevarez</title>
     <meta name="description" content="Portafolio de BC, Ingeniero de Software, desarrollador de videojuegos, creador de bots de IA y emprendedor.">
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
     <style>
+        /* ═══════════════════════════════════
+           RESET
+        ═══════════════════════════════════ */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        a    { text-decoration: none; color: inherit; }
+        svg  { display: inline-block; vertical-align: middle; flex-shrink: 0; }
+        img  { display: block; max-width: 100%; }
+        button { font-family: inherit; }
+        ul, ol { list-style: none; }
+
+        /* ═══════════════════════════════════
+           TOKENS
+        ═══════════════════════════════════ */
         :root {
-            --dkgray: #0d0e11;
-            --mdgray: #16181d;
-            --ltgray: #2a2d35;
+            --dk:     #0d0e11;
+            --md:     #16181d;
+            --lt:     #2a2d35;
             --accent: #ec0e6b;
-            --accent2: #ff6b35;
-            --glow: rgba(236, 14, 107, 0.35);
-            --text-primary: #e8eaed;
-            --text-secondary: #7a7f8e;
+            --a2:     #ff6b35;
+            --glow:   rgba(236,14,107,.35);
+            --tp:     #e8eaed;
+            --ts:     #7a7f8e;
         }
 
-        * { box-sizing: border-box; }
-
+        /* ═══════════════════════════════════
+           GLOBAL
+        ═══════════════════════════════════ */
         body {
             font-family: 'DM Sans', sans-serif;
-            background-color: var(--dkgray);
-            color: var(--text-primary);
+            background: var(--dk);
+            color: var(--tp);
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        h1,h2,h3,h4 { font-family: 'Syne', sans-serif; }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
         }
 
-        h1, h2, h3, h4, .font-display { font-family: 'Syne', sans-serif; }
-
-        /* ── CURSOR ── */
-        .cursor-dot {
-            width: 8px; height: 8px;
-            background: var(--accent);
-            border-radius: 50%;
-            position: fixed; top: 0; left: 0;
-            pointer-events: none; z-index: 9999;
-            transform: translate(-50%, -50%);
-            transition: transform 0.1s;
-        }
-        .cursor-ring {
-            width: 36px; height: 36px;
-            border: 1.5px solid var(--accent);
-            border-radius: 50%;
-            position: fixed; top: 0; left: 0;
-            pointer-events: none; z-index: 9998;
-            transform: translate(-50%, -50%);
-            transition: transform 0.15s ease, width 0.2s, height 0.2s, opacity 0.2s;
-            opacity: 0.6;
-        }
-        body:hover .cursor-ring { opacity: 1; }
-
-        /* ── NOISE OVERLAY ── */
+        /* ═══════════════════════════════════
+           NOISE + CANVAS
+        ═══════════════════════════════════ */
         body::before {
             content: '';
             position: fixed; inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-            opacity: 0.025;
-            pointer-events: none;
-            z-index: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            opacity: .025; pointer-events: none; z-index: 0;
         }
-
-        /* ── CANVAS PARTICLES ── */
         #particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 
-        /* ── GLASS ── */
-        .glass {
-            background: rgba(22, 24, 29, 0.6);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255,255,255,0.06);
+        /* ═══════════════════════════════════
+           CURSOR
+        ═══════════════════════════════════ */
+        .cursor-dot {
+            width: 8px; height: 8px;
+            background: var(--accent); border-radius: 50%;
+            position: fixed; top: 0; left: 0;
+            pointer-events: none; z-index: 9999;
+            transform: translate(-50%,-50%);
+        }
+        .cursor-ring {
+            width: 36px; height: 36px;
+            border: 1.5px solid var(--accent); border-radius: 50%;
+            position: fixed; top: 0; left: 0;
+            pointer-events: none; z-index: 9998;
+            transform: translate(-50%,-50%);
+            transition: width .2s, height .2s, opacity .2s;
+            opacity: .6;
         }
 
-        /* ── GRADIENT TEXT ── */
+        /* ═══════════════════════════════════
+           TYPOGRAPHY HELPERS
+        ═══════════════════════════════════ */
         .text-gradient {
-            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            background: linear-gradient(135deg, var(--accent), var(--a2));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
+        .section-label {
+            display: block;
+            font-family: 'Syne', sans-serif;
+            font-size: .7rem; letter-spacing: .2em;
+            text-transform: uppercase;
+            color: var(--accent); margin-bottom: .75rem;
+        }
+        .section-title {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(2rem,4vw,3rem);
+            font-weight: 800; line-height: 1.1;
+        }
 
-        /* ── HEADER ── */
+        /* ═══════════════════════════════════
+           BUTTONS
+        ═══════════════════════════════════ */
+        .btn-p, .btn-s {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 10px 22px; border-radius: 100px;
+            font-family: 'Syne', sans-serif;
+            font-size: .82rem; font-weight: 700;
+            cursor: pointer; border: none;
+            transition: background .25s, transform .25s, border-color .25s, color .25s;
+            white-space: nowrap;
+        }
+        .btn-p { background: var(--accent); color: #fff; }
+        .btn-p:hover { background: #ff1f7c; transform: scale(1.04); }
+        .btn-s { background: transparent; color: var(--ts); border: 1px solid var(--lt); }
+        .btn-s:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* ═══════════════════════════════════
+           HEADER
+        ═══════════════════════════════════ */
         header {
             position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-            transition: all 0.4s;
+            transition: background .4s, border-color .4s;
         }
         header.scrolled {
-            background: rgba(13,14,17,0.85);
+            background: rgba(13,14,17,.88);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--ltgray);
+            border-bottom: 1px solid var(--lt);
+        }
+        .header-inner {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 1rem 1.5rem;
+            max-width: 1200px; margin: 0 auto;
+        }
+        .logo {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.5rem; font-weight: 900;
+        }
+        .nav-links {
+            display: flex; align-items: center; gap: 2rem;
         }
         .nav-link {
             position: relative;
-            color: var(--text-secondary);
-            transition: color 0.3s;
+            color: var(--ts);
             font-family: 'Syne', sans-serif;
-            font-size: 0.85rem;
-            letter-spacing: 0.08em;
+            font-size: .82rem; letter-spacing: .08em;
             text-transform: uppercase;
+            transition: color .3s;
         }
         .nav-link::after {
-            content: '';
-            position: absolute; bottom: -3px; left: 0; right: 0;
+            content: ''; position: absolute;
+            bottom: -3px; left: 0; right: 0;
             height: 1px; background: var(--accent);
             transform: scaleX(0); transform-origin: right;
-            transition: transform 0.3s ease;
+            transition: transform .3s;
         }
-        .nav-link:hover { color: var(--text-primary); }
-        .nav-link:hover::after { transform: scaleX(1); transform-origin: left; }
+        .nav-link:hover, .nav-link.active { color: var(--tp); }
+        .nav-link:hover::after, .nav-link.active::after { transform: scaleX(1); transform-origin: left; }
 
-        /* ── HERO ── */
-        #hero { position: relative; min-height: 100vh; display: flex; align-items: center; }
-        .hero-line {
-            overflow: hidden;
+        .menu-btn {
+            display: none;
+            background: none; border: none;
+            color: #fff; cursor: pointer; padding: 6px;
         }
-        .hero-line span {
+        #mobile-menu {
+            display: none;
+            background: rgba(13,14,17,.97);
+            border-top: 1px solid var(--lt);
+        }
+        #mobile-menu.open { display: block; }
+        #mobile-menu a {
             display: block;
-            transform: translateY(120%);
-            animation: slide-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            padding: .75rem 1.5rem;
+            color: var(--ts);
+            font-family: 'Syne', sans-serif;
+            font-size: .85rem; letter-spacing: .08em;
+            text-transform: uppercase;
+            transition: color .3s;
         }
-        @keyframes slide-up {
-            to { transform: translateY(0); }
-        }
-        .hero-line:nth-child(1) span { animation-delay: 0.1s; }
-        .hero-line:nth-child(2) span { animation-delay: 0.25s; }
-        .hero-line:nth-child(3) span { animation-delay: 0.4s; }
-        .hero-line:nth-child(4) span { animation-delay: 0.55s; }
+        #mobile-menu a:hover { color: var(--accent); }
 
-        .avatar-wrap {
-            position: relative; display: inline-block;
-            animation: fade-in-scale 1s 0.6s both;
+        @media (max-width: 767px) {
+            .nav-links { display: none; }
+            .menu-btn  { display: block; }
         }
-        @keyframes fade-in-scale {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
+
+        /* ═══════════════════════════════════
+           HERO
+        ═══════════════════════════════════ */
+        #hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .hero-inner {
+            position: relative; z-index: 1;
+            text-align: center;
+            padding-top: 5rem;
+        }
+        .avatar-wrap {
+            position: relative;
+            display: inline-block;
+            margin-top: 2.5rem; margin-bottom: 2rem;
+            animation: fade-in-scale 1s .6s both;
         }
         .avatar-wrap::before {
             content: '';
             position: absolute; inset: -6px;
             border-radius: 50%;
-            background: conic-gradient(from 0deg, var(--accent), var(--accent2), var(--accent));
+            background: conic-gradient(from 0deg, var(--accent), var(--a2), var(--accent));
             animation: spin-slow 4s linear infinite;
             z-index: -1;
         }
-        @keyframes spin-slow { to { transform: rotate(360deg); } }
         .avatar-wrap img {
-            border-radius: 50%;
-            border: 4px solid var(--dkgray);
+            width: 8rem; height: 8rem;
+            border-radius: 50%; object-fit: cover;
+            border: 4px solid var(--dk);
         }
+        @media (min-width: 768px) { .avatar-wrap img { width: 10rem; height: 10rem; } }
+        @keyframes fade-in-scale { from{opacity:0;transform:scale(.8)} to{opacity:1;transform:scale(1)} }
+        @keyframes spin-slow { to { transform: rotate(360deg); } }
 
-        .scroll-indicator {
+        .hero-line { overflow: hidden; }
+        .hero-line span {
+            display: block;
+            transform: translateY(120%);
+            animation: slide-up .8s cubic-bezier(.22,1,.36,1) forwards;
+        }
+        @keyframes slide-up { to { transform: translateY(0); } }
+        .hero-line:nth-child(1) span { animation-delay: .10s; }
+        .hero-line:nth-child(2) span { animation-delay: .25s; }
+        .hero-line:nth-child(3) span { animation-delay: .40s; }
+        .hero-line:nth-child(4) span { animation-delay: .55s; }
+
+        .hero-name {
+            font-size: clamp(2.4rem,7vw,5rem);
+            font-weight: 900; line-height: 1.05;
+            margin-top: .4rem;
+        }
+        .hero-sub {
+            color: var(--ts); font-size: 1.1rem;
+            margin-top: 1.1rem;
+        }
+        .hero-cta {
+            margin-top: 2rem;
+            display: flex; align-items: center; justify-content: center;
+            gap: .75rem; flex-wrap: wrap;
+        }
+        .hero-cta .btn-p, .hero-cta .btn-s { font-size: .95rem; padding: 14px 36px; }
+
+        .scroll-ind {
             position: absolute; bottom: 2rem; left: 50%;
             transform: translateX(-50%);
             display: flex; flex-direction: column; align-items: center; gap: 6px;
-            color: var(--text-secondary); font-size: 0.7rem; letter-spacing: 0.15em;
-            text-transform: uppercase; animation: bounce-soft 2s infinite;
+            color: var(--ts); font-size: .7rem;
+            letter-spacing: .15em; text-transform: uppercase;
+            animation: bounce-soft 2s infinite;
         }
-        .scroll-indicator-line {
+        .scroll-ind-line {
             width: 1px; height: 48px;
             background: linear-gradient(to bottom, var(--accent), transparent);
             animation: grow-line 2s ease-in-out infinite;
         }
-        @keyframes grow-line {
-            0%, 100% { transform: scaleY(0.3); opacity: 0.3; }
-            50% { transform: scaleY(1); opacity: 1; }
-        }
-        @keyframes bounce-soft {
-            0%, 100% { transform: translateX(-50%) translateY(0); }
-            50% { transform: translateX(-50%) translateY(6px); }
-        }
+        @keyframes grow-line { 0%,100%{transform:scaleY(.3);opacity:.3} 50%{transform:scaleY(1);opacity:1} }
+        @keyframes bounce-soft { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
 
-        /* ── SECTION REVEALS ── */
-        .reveal {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.7s ease, transform 0.7s ease;
-        }
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .reveal-delay-1 { transition-delay: 0.1s; }
-        .reveal-delay-2 { transition-delay: 0.2s; }
-        .reveal-delay-3 { transition-delay: 0.3s; }
-        .reveal-delay-4 { transition-delay: 0.4s; }
-
-        /* ── SKILLS ── */
-        .skill-pill {
-            display: inline-flex; align-items: center; gap: 8px;
-            padding: 8px 18px;
-            border-radius: 100px;
-            border: 1px solid var(--ltgray);
-            background: var(--mdgray);
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            transition: all 0.3s ease;
-            cursor: default;
-        }
-        .skill-pill:hover {
-            border-color: var(--accent);
-            color: var(--text-primary);
-            background: rgba(236, 14, 107, 0.08);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(236, 14, 107, 0.15);
-        }
-        .skill-pill .dot {
-            width: 6px; height: 6px;
-            border-radius: 50%;
-            background: var(--accent);
-            flex-shrink: 0;
-        }
-
-        /* ── PROJECT CARDS ── */
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 28px;
-        }
-        .project-card {
-            position: relative;
-            border-radius: 16px;
-            overflow: hidden;
-            background: var(--mdgray);
-            border: 1px solid var(--ltgray);
-            cursor: pointer;
-            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-                        box-shadow 0.4s ease,
-                        border-color 0.3s;
-            group: true;
-        }
-        .project-card:hover {
-            transform: translateY(-8px) scale(1.01);
-            border-color: rgba(236, 14, 107, 0.4);
-            box-shadow: 0 24px 60px rgba(0,0,0,0.5), 0 0 40px var(--glow);
-        }
-        .project-card .card-img {
-            width: 100%; height: 220px;
-            object-fit: cover;
-            filter: brightness(0.7) saturate(0.8);
-            transition: filter 0.4s, transform 0.5s;
-        }
-        .project-card:hover .card-img {
-            filter: brightness(0.85) saturate(1.1);
-            transform: scale(1.04);
-        }
-        .card-img-wrap { overflow: hidden; position: relative; }
-        .card-tag {
-            position: absolute; top: 12px; left: 12px;
-            background: var(--accent);
-            color: white; font-family: 'Syne', sans-serif;
-            font-size: 0.7rem; letter-spacing: 0.1em;
-            text-transform: uppercase;
-            padding: 4px 10px; border-radius: 100px;
-        }
-        .card-body { padding: 24px; }
-        .card-body h3 {
-            font-family: 'Syne', sans-serif;
-            font-size: 1.2rem; font-weight: 700;
-            margin-bottom: 6px;
-        }
-        .card-body .role {
-            font-size: 0.8rem;
-            color: var(--accent);
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            margin-bottom: 12px;
-        }
-        .card-body p { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.7; }
-        .card-actions {
-            display: flex; gap: 10px; margin-top: 20px;
-        }
-        .btn-primary {
-            display: inline-flex; align-items: center; gap: 6px;
-            padding: 8px 18px; border-radius: 100px;
-            background: var(--accent); color: white;
-            font-family: 'Syne', sans-serif;
-            font-size: 0.8rem; font-weight: 700;
-            letter-spacing: 0.05em;
-            border: none; cursor: pointer;
-            transition: all 0.3s;
-        }
-        .btn-primary:hover { background: #ff1f7c; transform: scale(1.04); }
-        .btn-secondary {
-            display: inline-flex; align-items: center; gap: 6px;
-            padding: 8px 18px; border-radius: 100px;
-            background: transparent; color: var(--text-secondary);
-            font-size: 0.8rem;
-            border: 1px solid var(--ltgray); cursor: pointer;
-            transition: all 0.3s;
-        }
-        .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
-
-        /* ── PROJECT MODAL (FULLSCREEN) ── */
-        .project-modal-overlay {
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(12px);
-            z-index: 200;
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.35s;
-            display: flex; align-items: center; justify-content: center;
-            padding: 20px;
-        }
-        .project-modal-overlay.open {
-            opacity: 1; pointer-events: all;
-        }
-        .project-modal {
-            background: var(--mdgray);
-            border: 1px solid var(--ltgray);
-            border-radius: 20px;
-            max-width: 800px; width: 100%;
-            max-height: 90vh; overflow-y: auto;
-            transform: scale(0.92) translateY(30px);
-            transition: transform 0.4s cubic-bezier(0.22,1,0.36,1);
-        }
-        .project-modal-overlay.open .project-modal {
-            transform: scale(1) translateY(0);
-        }
-        .project-modal .modal-hero {
-            position: relative;
-            height: 260px;
-        }
-        .project-modal .modal-hero img {
-            width: 100%; height: 100%;
-            object-fit: cover;
-            border-radius: 20px 20px 0 0;
-            filter: brightness(0.75);
-        }
-        .project-modal .modal-hero-overlay {
-            position: absolute; inset: 0;
-            background: linear-gradient(to top, var(--mdgray) 10%, transparent 70%);
-            border-radius: 20px 20px 0 0;
-        }
-        .project-modal .modal-body { padding: 32px; }
-        .modal-close {
-            position: absolute; top: 16px; right: 16px;
-            width: 36px; height: 36px;
-            background: rgba(0,0,0,0.5);
-            border: none; border-radius: 50%;
-            color: white; font-size: 1.2rem;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            transition: background 0.2s;
-        }
-        .modal-close:hover { background: var(--accent); }
-
-        /* ── AI MODAL ── */
-        .ai-modal-overlay {
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(8px);
-            z-index: 300;
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.3s;
-            display: flex; align-items: center; justify-content: center;
-            padding: 20px;
-        }
-        .ai-modal-overlay.open { opacity: 1; pointer-events: all; }
-        .ai-modal {
-            background: var(--mdgray);
-            border: 1px solid var(--ltgray);
-            border-radius: 16px;
-            max-width: 640px; width: 100%;
-            padding: 36px;
-            transform: scale(0.93);
-            transition: transform 0.35s cubic-bezier(0.22,1,0.36,1);
-        }
-        .ai-modal-overlay.open .ai-modal { transform: scale(1); }
-        .ai-modal h3 {
-            font-family: 'Syne', sans-serif;
-            font-size: 1.3rem; font-weight: 800;
-            margin-bottom: 20px;
-        }
-
-        /* ── LOADER ── */
-        .loader {
-            width: 36px; height: 36px;
-            border: 3px solid var(--ltgray);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin: 24px auto;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* ── CONTACT ── */
-        .contact-card {
-            background: var(--mdgray);
-            border: 1px solid var(--ltgray);
-            border-radius: 20px;
-            padding: 48px;
-        }
-        .input-field {
-            width: 100%;
-            background: var(--dkgray);
-            border: 1px solid var(--ltgray);
-            border-radius: 100px;
-            padding: 12px 24px;
-            color: var(--text-primary);
-            font-family: 'DM Sans', sans-serif;
-            transition: border-color 0.3s, box-shadow 0.3s;
-            outline: none;
-        }
-        .input-field:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(236,14,107,0.15);
-        }
-        .social-btn {
-            width: 48px; height: 48px;
-            border-radius: 50%;
-            border: 1px solid var(--ltgray);
-            display: flex; align-items: center; justify-content: center;
-            color: var(--text-secondary);
-            transition: all 0.3s;
-        }
-        .social-btn:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-            transform: translateY(-4px) scale(1.1);
-            box-shadow: 0 8px 20px var(--glow);
-        }
-
-        /* ── ABOUT SECTION ── */
-        .about-img-wrap {
-            position: relative;
-        }
-        .about-img-wrap::before {
-            content: '';
-            position: absolute;
-            top: 20px; left: 20px; right: -20px; bottom: -20px;
-            border: 1px solid rgba(236,14,107,0.3);
-            border-radius: 16px;
-            z-index: -1;
-        }
-        .about-img-wrap img {
-            border-radius: 12px;
-            width: 100%;
-        }
-
-        /* ── MARQUEE ── */
+        /* ═══════════════════════════════════
+           MARQUEE
+        ═══════════════════════════════════ */
         .marquee-wrap {
             overflow: hidden;
-            border-top: 1px solid var(--ltgray);
-            border-bottom: 1px solid var(--ltgray);
+            border-top: 1px solid var(--lt);
+            border-bottom: 1px solid var(--lt);
         }
         .marquee-track {
             display: flex; gap: 60px;
             width: max-content;
-            animation: marquee 20s linear infinite;
+            animation: marquee 22s linear infinite;
             padding: 14px 0;
         }
         .marquee-item {
             font-family: 'Syne', sans-serif;
-            font-size: 0.8rem; font-weight: 700;
-            letter-spacing: 0.15em; text-transform: uppercase;
-            color: var(--text-secondary);
+            font-size: .78rem; font-weight: 700;
+            letter-spacing: .15em; text-transform: uppercase;
+            color: var(--ts);
             display: flex; align-items: center; gap: 20px;
             white-space: nowrap;
         }
-        .marquee-item::after { content: '✦'; color: var(--accent); font-size: 0.6rem; }
+        .marquee-item::after { content:'✦'; color:var(--accent); font-size:.6rem; }
         @keyframes marquee { to { transform: translateX(-50%); } }
 
-        /* ── SECTION LABELS ── */
-        .section-label {
-            font-family: 'Syne', sans-serif;
-            font-size: 0.7rem;
-            letter-spacing: 0.2em;
+        /* ═══════════════════════════════════
+           SCROLL REVEAL
+        ═══════════════════════════════════ */
+        .reveal {
+            opacity: 0; transform: translateY(40px);
+            transition: opacity .7s ease, transform .7s ease;
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .rd1 { transition-delay: .1s; }
+        .rd2 { transition-delay: .2s; }
+        .rd3 { transition-delay: .3s; }
+        .rd4 { transition-delay: .4s; }
+
+        /* ═══════════════════════════════════
+           ABOUT
+        ═══════════════════════════════════ */
+        #about { padding: 7rem 0; position: relative; z-index: 1; }
+        .about-row {
+            display: flex; flex-direction: column;
+            align-items: center; gap: 4rem;
+        }
+        @media (min-width: 768px) {
+            .about-row { flex-direction: row; }
+            .about-img  { width: 41.667%; flex-shrink: 0; }
+            .about-text { width: 58.333%; }
+        }
+        .about-img  { width: 100%; }
+        .about-text { width: 100%; }
+
+        .img-frame { position: relative; }
+        .img-frame::before {
+            content: '';
+            position: absolute;
+            top: 20px; left: 20px; right: -20px; bottom: -20px;
+            border: 1px solid rgba(236,14,107,.3);
+            border-radius: 16px; z-index: -1;
+        }
+        .img-frame img { border-radius: 12px; width: 100%; }
+
+        .about-text p {
+            color: var(--ts); font-size: 1.05rem;
+            line-height: 1.85; margin-bottom: 1.2rem;
+        }
+        .stats {
+            display: flex; gap: 2rem;
+            margin-top: 2rem; flex-wrap: wrap;
+        }
+        .stat { border-left: 2px solid var(--accent); padding-left: 1rem; }
+        .stat-n { font-family: 'Syne',sans-serif; font-size:1.8rem; font-weight:800; }
+        .stat-l { color: var(--ts); font-size: .82rem; margin-top: 2px; }
+
+        /* ═══════════════════════════════════
+           SKILLS
+        ═══════════════════════════════════ */
+        #skills {
+            padding: 5rem 0;
+            background: var(--md);
+            position: relative; z-index: 1;
+        }
+        .skills-hd { text-align: center; margin-bottom: 3.5rem; }
+        .skill-group { margin-bottom: 2.5rem; }
+        .skill-group-lbl {
+            display: block;
+            font-family: 'Syne',sans-serif;
+            font-size: .72rem; letter-spacing: .15em;
             text-transform: uppercase;
-            color: var(--accent);
+            color: var(--ts); margin-bottom: 14px;
+        }
+        .pills { display: flex; flex-wrap: wrap; gap: .75rem; }
+        .pill {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 8px 18px; border-radius: 100px;
+            border: 1px solid var(--lt);
+            background: var(--md);
+            font-size: .85rem; color: var(--ts);
+            transition: border-color .3s, color .3s, background .3s, transform .3s, box-shadow .3s;
+            cursor: default;
+        }
+        .pill:hover {
+            border-color: var(--accent); color: var(--tp);
+            background: rgba(236,14,107,.08);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(236,14,107,.15);
+        }
+        .pill .dot {
+            width: 6px; height: 6px;
+            border-radius: 50%; background: var(--accent); flex-shrink: 0;
+        }
+
+        /* ═══════════════════════════════════
+           PROJECTS
+        ═══════════════════════════════════ */
+        #projects { padding: 7rem 0; position: relative; z-index: 1; }
+        .proj-hd { text-align: center; margin-bottom: 3.5rem; }
+        .proj-hd p { color: var(--ts); margin-top: .75rem; }
+        .proj-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
+            gap: 28px;
+        }
+        .pcard {
+            border-radius: 16px; overflow: hidden;
+            background: var(--md); border: 1px solid var(--lt);
+            cursor: pointer;
+            transition: transform .4s cubic-bezier(.22,1,.36,1),
+                        box-shadow .4s, border-color .3s;
+        }
+        .pcard:hover {
+            transform: translateY(-8px) scale(1.01);
+            border-color: rgba(236,14,107,.4);
+            box-shadow: 0 24px 60px rgba(0,0,0,.5), 0 0 40px var(--glow);
+        }
+        .pcard-imgwrap { overflow: hidden; position: relative; }
+        .pcard-img {
+            width: 100%; height: 220px;
+            object-fit: cover; display: block;
+            filter: brightness(.7) saturate(.8);
+            transition: filter .4s, transform .5s;
+        }
+        .pcard:hover .pcard-img { filter: brightness(.9) saturate(1.1); transform: scale(1.05); }
+        .pcard-tag {
+            position: absolute; top: 12px; left: 12px;
+            background: var(--accent); color: #fff;
+            font-family: 'Syne',sans-serif;
+            font-size: .7rem; letter-spacing: .1em;
+            text-transform: uppercase;
+            padding: 4px 10px; border-radius: 100px;
+        }
+        .pcard-body { padding: 24px; }
+        .pcard-body h3 {
+            font-family: 'Syne',sans-serif;
+            font-size: 1.1rem; font-weight: 700;
+            color: var(--tp); margin-bottom: 6px;
+        }
+        .pcard-role {
+            font-size: .78rem; color: var(--accent);
+            text-transform: uppercase; letter-spacing: .08em;
             margin-bottom: 12px;
         }
-        .section-title {
-            font-family: 'Syne', sans-serif;
-            font-size: clamp(2rem, 4vw, 3rem);
-            font-weight: 800;
-            line-height: 1.1;
-        }
+        .pcard-body p { color: var(--ts); font-size: .9rem; line-height: 1.7; }
+        .pcard-actions { display: flex; gap: 10px; margin-top: 20px; }
 
-        /* ── FOOTER ── */
+        /* ═══════════════════════════════════
+           CONTACT
+        ═══════════════════════════════════ */
+        #contact {
+            padding: 7rem 0;
+            background: var(--md);
+            position: relative; z-index: 1;
+        }
+        .contact-wrap { max-width: 42rem; margin: 0 auto; }
+        .contact-hd { text-align: center; margin-bottom: 3rem; }
+        .contact-hd p { color: var(--ts); margin-top: 1rem; }
+        .contact-box {
+            background: var(--dk);
+            border: 1px solid var(--lt);
+            border-radius: 20px; padding: 3rem;
+        }
+        .ice-lbl {
+            font-family: 'Syne',sans-serif;
+            font-size: .82rem; color: var(--ts);
+            text-transform: uppercase; letter-spacing: .1em;
+            margin-bottom: 12px;
+        }
+        .ice-row { display: flex; gap: .5rem; margin-bottom: 2rem; }
+        .input {
+            flex: 1; min-width: 0;
+            background: var(--md); border: 1px solid var(--lt);
+            border-radius: 100px; padding: 12px 24px;
+            color: var(--tp); font-family: 'DM Sans',sans-serif;
+            font-size: .95rem; outline: none;
+            transition: border-color .3s, box-shadow .3s;
+        }
+        .input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(236,14,107,.15);
+        }
+        .contact-actions {
+            display: flex; flex-wrap: wrap;
+            align-items: center; justify-content: space-between;
+            gap: 1rem;
+        }
+        .contact-actions .btn-p { font-size: .95rem; padding: 14px 32px; }
+        .social-row { display: flex; gap: .75rem; }
+        .social-btn {
+            width: 48px; height: 48px;
+            border-radius: 50%;
+            border: 1px solid var(--lt);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--ts);
+            transition: border-color .3s, color .3s, transform .3s, box-shadow .3s;
+        }
+        .social-btn:hover {
+            border-color: var(--accent); color: var(--accent);
+            transform: translateY(-4px) scale(1.1);
+            box-shadow: 0 8px 20px var(--glow);
+        }
+        .social-btn svg { width: 1.2rem; height: 1.2rem; }
+
+        /* ═══════════════════════════════════
+           FOOTER
+        ═══════════════════════════════════ */
         footer {
-            border-top: 1px solid var(--ltgray);
-            padding: 32px;
+            border-top: 1px solid var(--lt);
+            padding: 2rem 1.5rem;
             text-align: center;
-            color: var(--text-secondary);
-            font-size: 0.85rem;
+            color: var(--ts); font-size: .85rem;
+            position: relative; z-index: 1;
         }
 
-        /* ── MOBILE MENU ── */
-        #mobile-menu {
-            background: rgba(13,14,17,0.97);
-            border-top: 1px solid var(--ltgray);
+        /* ═══════════════════════════════════
+           PROJECT DETAIL MODAL
+        ═══════════════════════════════════ */
+        .pm-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,.85);
+            backdrop-filter: blur(12px);
+            z-index: 200; opacity: 0; pointer-events: none;
+            transition: opacity .35s;
+            display: flex; align-items: center; justify-content: center;
+            padding: 20px;
+        }
+        .pm-overlay.open { opacity: 1; pointer-events: all; }
+        .pm-box {
+            background: var(--md); border: 1px solid var(--lt);
+            border-radius: 20px;
+            max-width: 800px; width: 100%;
+            max-height: 90vh; overflow-y: auto;
+            transform: scale(.92) translateY(30px);
+            transition: transform .4s cubic-bezier(.22,1,.36,1);
+        }
+        .pm-overlay.open .pm-box { transform: scale(1) translateY(0); }
+        .pm-hero { position: relative; height: 260px; }
+        .pm-hero img {
+            width: 100%; height: 100%; object-fit: cover;
+            border-radius: 20px 20px 0 0;
+            filter: brightness(.75); display: block;
+        }
+        .pm-hero-grad {
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, var(--md) 10%, transparent 70%);
+            border-radius: 20px 20px 0 0;
+        }
+        .pm-body { padding: 32px; }
+        .pm-tag {
+            display: inline-block;
+            background: var(--accent); color: #fff;
+            font-family: 'Syne',sans-serif;
+            font-size: .7rem; letter-spacing: .1em; text-transform: uppercase;
+            padding: 4px 10px; border-radius: 100px;
+            margin-bottom: 16px;
+        }
+        .pm-tech { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 2rem; }
+        .m-close {
+            position: absolute; top: 16px; right: 16px;
+            width: 36px; height: 36px;
+            background: rgba(0,0,0,.55);
+            border: none; border-radius: 50%;
+            color: #fff; font-size: 1.1rem;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: background .2s; line-height: 1;
+        }
+        .m-close:hover { background: var(--accent); }
+
+        /* ═══════════════════════════════════
+           AI MODAL
+        ═══════════════════════════════════ */
+        .ai-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,.82);
+            backdrop-filter: blur(8px);
+            z-index: 300; opacity: 0; pointer-events: none;
+            transition: opacity .3s;
+            display: flex; align-items: center; justify-content: center;
+            padding: 20px;
+        }
+        .ai-overlay.open { opacity: 1; pointer-events: all; }
+        .ai-box {
+            position: relative;
+            background: var(--md); border: 1px solid var(--lt);
+            border-radius: 16px;
+            max-width: 640px; width: 100%;
+            padding: 2.5rem;
+            transform: scale(.93);
+            transition: transform .35s cubic-bezier(.22,1,.36,1);
+            max-height: 85vh; overflow-y: auto;
+        }
+        .ai-overlay.open .ai-box { transform: scale(1); }
+        .ai-box h3 {
+            font-family: 'Syne',sans-serif;
+            font-size: 1.25rem; font-weight: 800;
+            margin-bottom: 1.25rem;
         }
 
-        /* ── ACTIVE NAV ── */
-        .nav-link.active { color: var(--accent); }
-        .nav-link.active::after { transform: scaleX(1); }
+        /* ═══════════════════════════════════
+           LOADER
+        ═══════════════════════════════════ */
+        .loader {
+            width: 36px; height: 36px;
+            border: 3px solid var(--lt);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin .8s linear infinite;
+            margin: 24px auto;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* markdown render */
-        .ai-content h2 { font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:700; color:var(--text-primary); margin:16px 0 8px; }
-        .ai-content h3 { font-family:'Syne',sans-serif; font-size:1rem; font-weight:700; color:var(--accent); margin:12px 0 6px; }
-        .ai-content ul { list-style: disc; padding-left: 20px; color:var(--text-secondary); line-height:1.8; }
-        .ai-content p { color:var(--text-secondary); line-height:1.8; margin-bottom:10px; }
-        .ai-content strong { color:var(--text-primary); }
+        /* ═══════════════════════════════════
+           AI CONTENT MARKDOWN
+        ═══════════════════════════════════ */
+        .aic h2 { font-family:'Syne',sans-serif; font-size:1.05rem; font-weight:700; color:var(--tp); margin:16px 0 8px; }
+        .aic h3 { font-family:'Syne',sans-serif; font-size:.95rem;  font-weight:700; color:var(--accent); margin:12px 0 6px; }
+        .aic ul { list-style:disc; padding-left:20px; color:var(--ts); line-height:1.8; }
+        .aic p  { color:var(--ts); line-height:1.8; margin-bottom:10px; }
+        .aic strong { color:var(--tp); }
+        .hidden { display: none !important; }
+        .ai-sep { border-top: 1px solid var(--lt); padding-top: 20px; margin-top: 1rem; }
     </style>
 </head>
 <body>
 
-<!-- Custom cursor -->
 <div class="cursor-dot" id="cursorDot"></div>
 <div class="cursor-ring" id="cursorRing"></div>
-
-<!-- Particles Canvas -->
 <canvas id="particles"></canvas>
 
 <!-- ══ HEADER ══ -->
 <header id="header">
-    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-        <a href="#" class="text-2xl font-display font-black text-gradient" style="font-family:'Syne',sans-serif;">BC</a>
-        <nav class="hidden md:flex items-center space-x-8">
-            <a href="#about" class="nav-link">Sobre Mí</a>
-            <a href="#skills" class="nav-link">Habilidades</a>
-            <a href="#projects" class="nav-link">Proyectos</a>
-            <a href="#contact" class="nav-link">Contacto</a>
-        </nav>
-        <div class="md:hidden">
-            <button id="menu-btn" class="text-white p-2">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/></svg>
-            </button>
-        </div>
+    <div class="header-inner">
+        <a href="#" class="logo text-gradient">BC</a>
+        <ul class="nav-links">
+            <li><a href="#about"    class="nav-link">Sobre Mí</a></li>
+            <li><a href="#skills"   class="nav-link">Habilidades</a></li>
+            <li><a href="#projects" class="nav-link">Proyectos</a></li>
+            <li><a href="#contact"  class="nav-link">Contacto</a></li>
+        </ul>
+        <button class="menu-btn" id="menuBtn" aria-label="Menú">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7"/>
+            </svg>
+        </button>
     </div>
-    <div id="mobile-menu" class="hidden md:hidden">
-        <div class="px-6 py-4 space-y-3">
-            <a href="#about" class="block nav-link py-2">Sobre Mí</a>
-            <a href="#skills" class="block nav-link py-2">Habilidades</a>
-            <a href="#projects" class="block nav-link py-2">Proyectos</a>
-            <a href="#contact" class="block nav-link py-2">Contacto</a>
-        </div>
+    <div id="mobile-menu">
+        <a href="#about">Sobre Mí</a>
+        <a href="#skills">Habilidades</a>
+        <a href="#projects">Proyectos</a>
+        <a href="#contact">Contacto</a>
     </div>
 </header>
 
 <main>
+
 <!-- ══ HERO ══ -->
 <section id="hero">
-    <div class="container mx-auto px-6 relative z-10">
-        <div class="max-w-4xl mx-auto text-center">
-            <div class="avatar-wrap mb-8 inline-block" style="margin-top:8rem;">
-                <img src="images/Logo.png" alt="BC Logo" class="w-28 h-28 md:w-36 md:h-36 object-cover">
-            </div>
-            <div class="hero-line">
-                <span class="section-label">Ingeniero de Software · Creador Digital</span>
-            </div>
-            <div class="hero-line mt-3">
-                <span class="section-title" style="font-size:clamp(2.2rem,6vw,4.5rem);">
-                    <span class="text-gradient">Edgar Daniel</span><br>Chaparro Nevarez
-                </span>
-            </div>
-            <div class="hero-line mt-5">
-                <span style="color:var(--text-secondary); font-size:1.1rem;">
-                    Programando diversión, una línea de código a la vez.
-                </span>
-            </div>
-            <div class="hero-line mt-8">
-                <span>
-                    <a href="#projects" class="btn-primary" style="font-size:0.95rem; padding:14px 36px; display:inline-flex;">
-                        Ver Proyectos
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-                    </a>
-                    <a href="#contact" class="btn-secondary ml-3" style="font-size:0.95rem; padding:14px 36px; display:inline-flex;">
-                        Contacto
-                    </a>
-                </span>
-            </div>
+    <div class="hero-inner container">
+        <div class="avatar-wrap">
+            <img src="images/Logo.png" alt="BC Logo">
+        </div>
+        <div class="hero-line">
+            <span class="section-label">Ingeniero de Software · Creador Digital</span>
+        </div>
+        <div class="hero-line" style="margin-top:.4rem;">
+            <span class="hero-name">
+                <span class="text-gradient">Edgar Daniel</span><br>Chaparro Nevarez
+            </span>
+        </div>
+        <div class="hero-line">
+            <span class="hero-sub">Programando diversión, una línea de código a la vez.</span>
+        </div>
+        <div class="hero-line">
+            <span class="hero-cta">
+                <a href="#projects" class="btn-p">
+                    Ver Proyectos
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                    </svg>
+                </a>
+                <a href="#contact" class="btn-s">Contacto</a>
+            </span>
         </div>
     </div>
-    <div class="scroll-indicator">
-        <div class="scroll-indicator-line"></div>
+    <div class="scroll-ind">
+        <div class="scroll-ind-line"></div>
         <span>scroll</span>
     </div>
 </section>
 
 <!-- ══ MARQUEE ══ -->
-<div class="marquee-wrap py-0 my-0">
+<div class="marquee-wrap">
     <div class="marquee-track">
-        <span class="marquee-item">Python</span>
-        <span class="marquee-item">C#</span>
-        <span class="marquee-item">JavaScript</span>
-        <span class="marquee-item">Google Gemini AI</span>
-        <span class="marquee-item">Discord Bots</span>
-        <span class="marquee-item">React</span>
-        <span class="marquee-item">Rive</span>
-        <span class="marquee-item">Full-Stack</span>
-        <span class="marquee-item">Diseño 3D</span>
-        <span class="marquee-item">SQL</span>
-        <span class="marquee-item">tModLoader</span>
-        <span class="marquee-item">E-commerce</span>
-        <!-- duplicate for seamless loop -->
-        <span class="marquee-item">Python</span>
-        <span class="marquee-item">C#</span>
-        <span class="marquee-item">JavaScript</span>
-        <span class="marquee-item">Google Gemini AI</span>
-        <span class="marquee-item">Discord Bots</span>
-        <span class="marquee-item">React</span>
-        <span class="marquee-item">Rive</span>
-        <span class="marquee-item">Full-Stack</span>
-        <span class="marquee-item">Diseño 3D</span>
-        <span class="marquee-item">SQL</span>
-        <span class="marquee-item">tModLoader</span>
-        <span class="marquee-item">E-commerce</span>
+        <span class="marquee-item">Python</span><span class="marquee-item">C#</span>
+        <span class="marquee-item">JavaScript</span><span class="marquee-item">Google Gemini AI</span>
+        <span class="marquee-item">Discord Bots</span><span class="marquee-item">React</span>
+        <span class="marquee-item">Rive</span><span class="marquee-item">Full-Stack</span>
+        <span class="marquee-item">Diseño 3D</span><span class="marquee-item">SQL</span>
+        <span class="marquee-item">tModLoader</span><span class="marquee-item">E-commerce</span>
+        <!-- dupe for loop -->
+        <span class="marquee-item">Python</span><span class="marquee-item">C#</span>
+        <span class="marquee-item">JavaScript</span><span class="marquee-item">Google Gemini AI</span>
+        <span class="marquee-item">Discord Bots</span><span class="marquee-item">React</span>
+        <span class="marquee-item">Rive</span><span class="marquee-item">Full-Stack</span>
+        <span class="marquee-item">Diseño 3D</span><span class="marquee-item">SQL</span>
+        <span class="marquee-item">tModLoader</span><span class="marquee-item">E-commerce</span>
     </div>
 </div>
 
 <!-- ══ ABOUT ══ -->
-<section id="about" class="py-28 relative z-10">
-    <div class="container mx-auto px-6">
-        <div class="flex flex-col md:flex-row items-center gap-16">
-            <div class="md:w-5/12 reveal">
-                <div class="about-img-wrap">
-                    <img src="images/BCFOTO.jpg" alt="BC" />
+<section id="about">
+    <div class="container">
+        <div class="about-row">
+            <div class="about-img reveal">
+                <div class="img-frame">
+                    <img src="images/BCFOTO.jpg" alt="Edgar Daniel Chaparro">
                 </div>
             </div>
-            <div class="md:w-7/12">
+            <div class="about-text">
                 <p class="section-label reveal">Sobre Mí</p>
-                <h2 class="section-title mb-6 reveal reveal-delay-1">Desarrollador con <span class="text-gradient">visión completa</span></h2>
-                <p class="text-lg mb-5 reveal reveal-delay-2" style="color:var(--text-secondary); line-height:1.8;">
+                <h2 class="section-title rd1 reveal" style="margin-bottom:1.5rem;">
+                    Desarrollador con <span class="text-gradient">visión completa</span>
+                </h2>
+                <p class="reveal rd2">
                     Ingeniero de Software innovador y autodidacta con un portafolio robusto de proyectos de ciclo completo, desde aplicaciones empresariales seguras y bots de IA conversacional hasta la gestión de comunidades de videojuegos y emprendimientos de e-commerce.
                 </p>
-                <p class="text-lg reveal reveal-delay-3" style="color:var(--text-secondary); line-height:1.8;">
+                <p class="reveal rd3">
                     Apasionado por transformar ideas complejas en soluciones tecnológicas elegantes, funcionales y centradas en el usuario.
                 </p>
-                <div class="flex gap-4 mt-8 reveal reveal-delay-4">
-                    <div style="border-left:2px solid var(--accent); padding-left:16px;">
-                        <div style="font-family:'Syne',sans-serif; font-size:1.8rem; font-weight:800;">3+</div>
-                        <div style="color:var(--text-secondary); font-size:0.85rem;">Proyectos completos</div>
-                    </div>
-                    <div style="border-left:2px solid var(--accent); padding-left:16px; margin-left:24px;">
-                        <div style="font-family:'Syne',sans-serif; font-size:1.8rem; font-weight:800;">∞</div>
-                        <div style="color:var(--text-secondary); font-size:0.85rem;">Líneas de código</div>
-                    </div>
-                    <div style="border-left:2px solid var(--accent); padding-left:16px; margin-left:24px;">
-                        <div style="font-family:'Syne',sans-serif; font-size:1.8rem; font-weight:800;">100%</div>
-                        <div style="color:var(--text-secondary); font-size:0.85rem;">Autodidacta</div>
-                    </div>
+                <div class="stats reveal rd4">
+                    <div class="stat"><div class="stat-n">3+</div><div class="stat-l">Proyectos completos</div></div>
+                    <div class="stat"><div class="stat-n">∞</div><div class="stat-l">Líneas de código</div></div>
+                    <div class="stat"><div class="stat-n">100%</div><div class="stat-l">Autodidacta</div></div>
                 </div>
             </div>
         </div>
@@ -649,112 +734,105 @@
 </section>
 
 <!-- ══ SKILLS ══ -->
-<section id="skills" class="py-20 relative z-10" style="background:var(--mdgray);">
-    <div class="container mx-auto px-6">
-        <div class="text-center mb-14">
+<section id="skills">
+    <div class="container">
+        <div class="skills-hd">
             <p class="section-label reveal">Tecnologías</p>
-            <h2 class="section-title reveal reveal-delay-1">Stack <span class="text-gradient">técnico</span></h2>
+            <h2 class="section-title reveal rd1">Stack <span class="text-gradient">técnico</span></h2>
         </div>
-
-        <div class="mb-10 reveal reveal-delay-1">
-            <p style="font-family:'Syne',sans-serif; font-size:0.75rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-secondary); margin-bottom:14px;">Lenguajes & Plataformas</p>
-            <div class="flex flex-wrap gap-3">
-                <span class="skill-pill"><span class="dot"></span>Python</span>
-                <span class="skill-pill"><span class="dot"></span>C#</span>
-                <span class="skill-pill"><span class="dot"></span>JavaScript</span>
-                <span class="skill-pill"><span class="dot"></span>SQL</span>
-                <span class="skill-pill"><span class="dot"></span>HTML / CSS</span>
+        <div class="skill-group reveal rd1">
+            <span class="skill-group-lbl">Lenguajes &amp; Plataformas</span>
+            <div class="pills">
+                <span class="pill"><span class="dot"></span>Python</span>
+                <span class="pill"><span class="dot"></span>C#</span>
+                <span class="pill"><span class="dot"></span>JavaScript</span>
+                <span class="pill"><span class="dot"></span>SQL</span>
+                <span class="pill"><span class="dot"></span>HTML / CSS</span>
             </div>
         </div>
-        <div class="mb-10 reveal reveal-delay-2">
-            <p style="font-family:'Syne',sans-serif; font-size:0.75rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-secondary); margin-bottom:14px;">Inteligencia Artificial</p>
-            <div class="flex flex-wrap gap-3">
-                <span class="skill-pill"><span class="dot"></span>Google Gemini API</span>
-                <span class="skill-pill"><span class="dot"></span>Ingeniería de Prompts</span>
-                <span class="skill-pill"><span class="dot"></span>Diseño Conversacional</span>
+        <div class="skill-group reveal rd2">
+            <span class="skill-group-lbl">Inteligencia Artificial</span>
+            <div class="pills">
+                <span class="pill"><span class="dot"></span>Google Gemini API</span>
+                <span class="pill"><span class="dot"></span>Ingeniería de Prompts</span>
+                <span class="pill"><span class="dot"></span>Diseño Conversacional</span>
             </div>
         </div>
-        <div class="mb-10 reveal reveal-delay-3">
-            <p style="font-family:'Syne',sans-serif; font-size:0.75rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-secondary); margin-bottom:14px;">Frameworks & Herramientas</p>
-            <div class="flex flex-wrap gap-3">
-                <span class="skill-pill"><span class="dot"></span>Discord.py</span>
-                <span class="skill-pill"><span class="dot"></span>tModLoader</span>
-                <span class="skill-pill"><span class="dot"></span>.NET</span>
-                <span class="skill-pill"><span class="dot"></span>React</span>
-                <span class="skill-pill"><span class="dot"></span>Rive</span>
-                <span class="skill-pill"><span class="dot"></span>Git / GitHub</span>
-                <span class="skill-pill"><span class="dot"></span>Visual Studio</span>
+        <div class="skill-group reveal rd3">
+            <span class="skill-group-lbl">Frameworks &amp; Herramientas</span>
+            <div class="pills">
+                <span class="pill"><span class="dot"></span>Discord.py</span>
+                <span class="pill"><span class="dot"></span>React</span>
+                <span class="pill"><span class="dot"></span>Rive</span>
+                <span class="pill"><span class="dot"></span>tModLoader</span>
+                <span class="pill"><span class="dot"></span>.NET</span>
+                <span class="pill"><span class="dot"></span>Git / GitHub</span>
+                <span class="pill"><span class="dot"></span>Visual Studio</span>
             </div>
         </div>
-        <div class="reveal reveal-delay-4">
-            <p style="font-family:'Syne',sans-serif; font-size:0.75rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-secondary); margin-bottom:14px;">Habilidades Creativas</p>
-            <div class="flex flex-wrap gap-3">
-                <span class="skill-pill"><span class="dot"></span>Diseño 3D</span>
-                <span class="skill-pill"><span class="dot"></span>Edición de Video</span>
-                <span class="skill-pill"><span class="dot"></span>Marketing de Contenidos</span>
-                <span class="skill-pill"><span class="dot"></span>UI / UX</span>
+        <div class="skill-group reveal rd4">
+            <span class="skill-group-lbl">Habilidades Creativas</span>
+            <div class="pills">
+                <span class="pill"><span class="dot"></span>Diseño 3D</span>
+                <span class="pill"><span class="dot"></span>Edición de Video</span>
+                <span class="pill"><span class="dot"></span>Marketing de Contenidos</span>
+                <span class="pill"><span class="dot"></span>UI / UX</span>
             </div>
         </div>
     </div>
 </section>
 
 <!-- ══ PROJECTS ══ -->
-<section id="projects" class="py-28 relative z-10">
-    <div class="container mx-auto px-6">
-        <div class="text-center mb-14">
+<section id="projects">
+    <div class="container">
+        <div class="proj-hd">
             <p class="section-label reveal">Portafolio</p>
-            <h2 class="section-title reveal reveal-delay-1">Proyectos <span class="text-gradient">destacados</span></h2>
-            <p class="mt-4 reveal reveal-delay-2" style="color:var(--text-secondary);">Haz clic en una tarjeta para ver más detalles</p>
+            <h2 class="section-title reveal rd1">Proyectos <span class="text-gradient">destacados</span></h2>
+            <p class="reveal rd2">Haz clic en una tarjeta para ver más detalles</p>
         </div>
-
-        <div class="projects-grid">
-            <!-- Card 1 -->
-            <div class="project-card reveal" onclick="openProjectModal(0)">
-                <div class="card-img-wrap">
-                    <img src="images/caballero negro.jpg" alt="Caballero Negro Bot" class="card-img">
-                    <span class="card-tag">IA & Bots</span>
+        <div class="proj-grid">
+            <div class="pcard reveal" onclick="openPM(0)">
+                <div class="pcard-imgwrap">
+                    <img src="images/caballero negro.jpg" alt="Caballero Negro" class="pcard-img">
+                    <span class="pcard-tag">IA &amp; Bots</span>
                 </div>
-                <div class="card-body">
+                <div class="pcard-body">
                     <h3>Bot "Caballero Negro"</h3>
-                    <div class="role">Desarrollador de IA · Diseñador Narrativo</div>
+                    <div class="pcard-role">Desarrollador de IA · Diseñador Narrativo</div>
                     <p>Bot conversacional avanzado con Google Gemini API, personalidad persistente y memoria contextual adaptable por usuario.</p>
-                    <div class="card-actions">
-                        <button class="btn-primary" onclick="event.stopPropagation(); openAI('Caballero Negro Bot')">✨ IA</button>
-                        <button class="btn-secondary" onclick="event.stopPropagation(); openProjectModal(0)">Ver más →</button>
+                    <div class="pcard-actions">
+                        <button class="btn-p" onclick="event.stopPropagation(); openAI('Caballero Negro Bot')">✨ IA</button>
+                        <button class="btn-s" onclick="event.stopPropagation(); openPM(0)">Ver más →</button>
                     </div>
                 </div>
             </div>
-
-            <!-- Card 2 -->
-            <div class="project-card reveal reveal-delay-1" onclick="openProjectModal(1)">
-                <div class="card-img-wrap">
-                    <img src="images/sindicato.jpg" alt="SNTSS" class="card-img">
-                    <span class="card-tag">Empresarial</span>
+            <div class="pcard reveal rd1" onclick="openPM(1)">
+                <div class="pcard-imgwrap">
+                    <img src="images/sindicato.jpg" alt="SNTSS" class="pcard-img">
+                    <span class="pcard-tag">Empresarial</span>
                 </div>
-                <div class="card-body">
+                <div class="pcard-body">
                     <h3>Sistema SNTSS</h3>
-                    <div class="role">Desarrollador Full-Stack</div>
+                    <div class="pcard-role">Desarrollador Full-Stack</div>
                     <p>App de escritorio en Python con base de datos SQL cifrada, gestión segura de personal y dashboard con exportación a Excel.</p>
-                    <div class="card-actions">
-                        <button class="btn-primary" onclick="event.stopPropagation(); openAI('Sistema de Gestión SNTSS')">✨ IA</button>
-                        <button class="btn-secondary" onclick="event.stopPropagation(); openProjectModal(1)">Ver más →</button>
+                    <div class="pcard-actions">
+                        <button class="btn-p" onclick="event.stopPropagation(); openAI('Sistema de Gestión SNTSS')">✨ IA</button>
+                        <button class="btn-s" onclick="event.stopPropagation(); openPM(1)">Ver más →</button>
                     </div>
                 </div>
             </div>
-
-            <!-- Card 3 -->
-            <div class="project-card reveal reveal-delay-2" onclick="openProjectModal(2)">
-                <div class="card-img-wrap">
-                    <img src="images/axis3d.jpg" alt="Tienda 3D" class="card-img">
-                    <span class="card-tag">E-commerce</span>
+            <div class="pcard reveal rd2" onclick="openPM(2)">
+                <div class="pcard-imgwrap">
+                    <img src="images/axis3d.jpg" alt="Tienda 3D" class="pcard-img">
+                    <span class="pcard-tag">E-commerce</span>
                 </div>
-                <div class="card-body">
+                <div class="pcard-body">
                     <h3>Tienda 3D — Axis</h3>
-                    <div class="role">Fundador · Fabricante Digital</div>
+                    <div class="pcard-role">Fundador · Fabricante Digital</div>
                     <p>Emprendimiento personal: diseño 3D propio, manufactura digital, marketing y ventas online end-to-end.</p>
-                    <div class="card-actions">
-                        <button class="btn-primary" onclick="event.stopPropagation(); openAI('Tienda E-commerce de Impresiones 3D')">✨ IA</button>
-                        <button class="btn-secondary" onclick="event.stopPropagation(); openProjectModal(2)">Ver más →</button>
+                    <div class="pcard-actions">
+                        <button class="btn-p" onclick="event.stopPropagation(); openAI('Tienda E-commerce de Impresiones 3D')">✨ IA</button>
+                        <button class="btn-s" onclick="event.stopPropagation(); openPM(2)">Ver más →</button>
                     </div>
                 </div>
             </div>
@@ -763,37 +841,36 @@
 </section>
 
 <!-- ══ CONTACT ══ -->
-<section id="contact" class="py-28 relative z-10" style="background:var(--mdgray);">
-    <div class="container mx-auto px-6">
-        <div class="max-w-2xl mx-auto">
-            <div class="text-center mb-12">
+<section id="contact">
+    <div class="container">
+        <div class="contact-wrap">
+            <div class="contact-hd">
                 <p class="section-label reveal">Contacto</p>
-                <h2 class="section-title reveal reveal-delay-1">Hablemos <span class="text-gradient">juntos</span></h2>
-                <p class="mt-4 reveal reveal-delay-2" style="color:var(--text-secondary);">Estoy abierto a nuevas oportunidades y colaboraciones.</p>
+                <h2 class="section-title reveal rd1">Hablemos <span class="text-gradient">juntos</span></h2>
+                <p class="reveal rd2">Estoy abierto a nuevas oportunidades y colaboraciones.</p>
             </div>
-
-            <div class="contact-card reveal reveal-delay-2">
-                <!-- AI Icebreaker -->
-                <p style="font-family:'Syne',sans-serif; font-size:0.85rem; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:12px;">¿No sabes cómo empezar?</p>
-                <div class="flex gap-2 mb-8">
-                    <input id="icebreaker-input" type="text" class="input-field" placeholder="Escribe un tema (ej: videojuegos)">
-                    <button id="icebreaker-btn" class="btn-primary" style="white-space:nowrap; flex-shrink:0;">✨ Rompe el hielo</button>
+            <div class="contact-box reveal rd2">
+                <p class="ice-lbl">¿No sabes cómo empezar?</p>
+                <div class="ice-row">
+                    <input id="iceInput" type="text" class="input" placeholder="Escribe un tema (ej: videojuegos)">
+                    <button id="iceBtn" class="btn-p">✨ Rompe el hielo</button>
                 </div>
-
-                <div class="flex flex-col sm:flex-row gap-4 items-center justify-between">
-                    <a href="mailto:daniel1234edgar@gmail.com" class="btn-primary" style="font-size:0.95rem; padding:14px 32px; text-decoration:none;">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                <div class="contact-actions">
+                    <a href="mailto:daniel1234edgar@gmail.com" class="btn-p">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
                         Enviar Correo
                     </a>
-                    <div class="flex gap-3">
-                        <a href="https://twitter.com/BestiaCriper" target="_blank" class="social-btn">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.71v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"/></svg>
+                    <div class="social-row">
+                        <a href="https://twitter.com/BestiaCriper" target="_blank" rel="noopener" class="social-btn" aria-label="Twitter">
+                            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.71v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"/></svg>
                         </a>
-                        <a href="https://www.instagram.com/daniel._.nev/" target="_blank" class="social-btn">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.024.06 1.378.06 3.808s-.012 2.784-.06 3.808c-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.024.048-1.378.06-3.808.06s-2.784-.013-3.808-.06c-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427C2.013 14.53 2 14.176 2 12s.013-2.784.06-3.808c.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clip-rule="evenodd"/></svg>
+                        <a href="https://www.instagram.com/daniel._.nev/" target="_blank" rel="noopener" class="social-btn" aria-label="Instagram">
+                            <svg fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.024.06 1.378.06 3.808s-.012 2.784-.06 3.808c-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.024.048-1.378.06-3.808.06s-2.784-.013-3.808-.06c-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427C2.013 14.53 2 14.176 2 12s.013-2.784.06-3.808c.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clip-rule="evenodd"/></svg>
                         </a>
-                        <a href="https://www.linkedin.com/in/edgar-daniel-chaparro-nev%C3%A1rez-209936347/" target="_blank" class="social-btn">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                        <a href="https://www.linkedin.com/in/edgar-daniel-chaparro-nev%C3%A1rez-209936347/" target="_blank" rel="noopener" class="social-btn" aria-label="LinkedIn">
+                            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
                         </a>
                     </div>
                 </div>
@@ -801,314 +878,252 @@
         </div>
     </div>
 </section>
+
 </main>
 
 <footer>
     <p>&copy; 2025 Edgar Daniel Chaparro Nevarez (BC). Todos los derechos reservados.</p>
-    <p style="margin-top:10px; font-size:0.65rem; color:#2a2d35; letter-spacing:0.06em; user-select:none;" title="Kept you waiting, huh?">
-        "The world will remember who he was." — <em>Big Boss</em>
-    </p>
+    <p style="margin-top:10px;font-size:.6rem;color:#18191f;letter-spacing:.06em;user-select:none;" title="Kept you waiting, huh?">"The world will remember who he was." — <em>Big Boss</em></p>
 </footer>
 
-<!-- ══ PROJECT DETAIL MODAL ══ -->
-<div class="project-modal-overlay" id="projectModalOverlay" onclick="closeProjectModal(event)">
-    <div class="project-modal" id="projectModal">
-        <div class="modal-hero" id="modalHero">
-            <img id="modalHeroImg" src="" alt="">
-            <div class="modal-hero-overlay"></div>
-            <button class="modal-close" onclick="closeProjectModal()">✕</button>
+<!-- ══ PROJECT MODAL ══ -->
+<div class="pm-overlay" id="pmOverlay">
+    <div class="pm-box" id="pmBox">
+        <div class="pm-hero" id="pmHero">
+            <img id="pmImg" src="" alt="">
+            <div class="pm-hero-grad"></div>
+            <button class="m-close" id="pmClose">✕</button>
         </div>
-        <div class="modal-body">
-            <span class="card-tag" id="modalTag" style="position:static; display:inline-block; margin-bottom:16px;"></span>
-            <h2 id="modalTitle" style="font-family:'Syne',sans-serif; font-size:1.8rem; font-weight:800; margin-bottom:6px;"></h2>
-            <p id="modalRole" style="color:var(--accent); font-size:0.85rem; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:20px;"></p>
-            <p id="modalDesc" style="color:var(--text-secondary); line-height:1.8; margin-bottom:24px;"></p>
-            <div id="modalTech" class="flex flex-wrap gap-2 mb-8"></div>
-            <button id="modalAiBtn" class="btn-primary">✨ Analizar con IA</button>
-            <div id="modalAiResult" class="mt-6 ai-content hidden" style="border-top:1px solid var(--ltgray); padding-top:20px;"></div>
+        <div class="pm-body">
+            <span class="pm-tag" id="pmTag"></span>
+            <h2 id="pmTitle" style="font-size:1.75rem;font-weight:800;margin-bottom:6px;"></h2>
+            <p id="pmRole" style="color:var(--accent);font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px;"></p>
+            <p id="pmDesc" style="color:var(--ts);line-height:1.85;margin-bottom:24px;"></p>
+            <div id="pmTech" class="pm-tech"></div>
+            <button id="pmAiBtn" class="btn-p">✨ Analizar con IA</button>
+            <div id="pmAiResult" class="aic ai-sep hidden"></div>
         </div>
     </div>
 </div>
 
 <!-- ══ AI MODAL ══ -->
-<div class="ai-modal-overlay" id="aiModalOverlay" onclick="closeAIModal(event)">
-    <div class="ai-modal">
-        <button class="modal-close" style="position:absolute; top:16px; right:16px;" onclick="closeAIModal()">✕</button>
-        <h3 id="aiModalTitle" class="text-gradient">Generando...</h3>
-        <div id="aiModalBody"><div class="loader"></div></div>
+<div class="ai-overlay" id="aiOverlay">
+    <div class="ai-box" id="aiBox">
+        <button class="m-close" id="aiClose" style="position:absolute;top:16px;right:16px;">✕</button>
+        <h3 id="aiTitle" class="text-gradient">Generando...</h3>
+        <div id="aiBody"><div class="loader"></div></div>
     </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-// ── PROJECT DATA ──
+<script>
+/* DATA */
 const projects = [
     {
-        title: 'Bot de Discord "Caballero Negro"',
-        role: 'Desarrollador de IA · Diseñador Narrativo',
-        tag: 'IA & Bots',
-        img: 'images/caballero negro.jpg',
-        desc: 'Creación de un bot conversacional avanzado utilizando la API de Google Gemini, con una personalidad persistente, memoria contextual y un diseño de interacción adaptable que cambia según el usuario. El bot puede sostener conversaciones profundas, recordar preferencias y adaptar su tono narrativo.',
-        tech: ['Python', 'Discord.py', 'Google Gemini API', 'Ingeniería de Prompts', 'Memoria Contextual'],
-        aiKey: 'Caballero Negro Bot — Bot de Discord con IA conversacional usando Google Gemini'
+        title:'Bot de Discord "Caballero Negro"',
+        role:'Desarrollador de IA · Diseñador Narrativo',
+        tag:'IA & Bots',
+        img:'images/caballero negro.jpg',
+        desc:'Bot conversacional avanzado usando Google Gemini API con personalidad persistente, memoria contextual y diseño de interacción adaptable por usuario. Sostiene conversaciones profundas y adapta su tono narrativo.',
+        tech:['Python','Discord.py','Google Gemini API','Ingeniería de Prompts','Memoria Contextual'],
+        key:'Caballero Negro Bot — Discord bot con IA conversacional usando Google Gemini'
     },
     {
-        title: 'Sistema de Gestión SNTSS',
-        role: 'Desarrollador Full-Stack',
-        tag: 'Empresarial',
-        img: 'images/sindicato.jpg',
-        desc: 'Solución de escritorio en Python para un cliente real (SNTSS), con base de datos SQL cifrada para gestión segura de personal. Incluye dashboard de métricas en tiempo real, reportes y exportación a Excel. Proyecto de ciclo completo desde requerimientos hasta entrega.',
-        tech: ['Python', 'SQL cifrado', '.NET', 'Dashboard de métricas', 'Exportación Excel'],
-        aiKey: 'Sistema de Gestión de Empleados del SNTSS — App empresarial Python con SQL cifrado'
+        title:'Sistema de Gestión SNTSS',
+        role:'Desarrollador Full-Stack',
+        tag:'Empresarial',
+        img:'images/sindicato.jpg',
+        desc:'App de escritorio en Python para el SNTSS con SQL cifrado, gestión segura de personal, dashboard de métricas en tiempo real y exportación a Excel. Proyecto de ciclo completo.',
+        tech:['Python','SQL cifrado','.NET','Dashboard de métricas','Excel export'],
+        key:'Sistema de Gestión SNTSS — App empresarial Python con SQL cifrado'
     },
     {
-        title: 'Tienda 3D — Axis',
-        role: 'Fundador · Fabricante Digital',
-        tag: 'E-commerce',
-        img: 'images/axis3d.jpg',
-        desc: 'Emprendimiento personal para la venta de diseños propios de impresión 3D. Gestión completa del ciclo de producto: diseño 3D CAD, manufactura digital, fotografía, marketing en redes sociales y ventas online. Experiencia end-to-end como fundador.',
-        tech: ['Diseño 3D CAD', 'Manufactura digital', 'Marketing digital', 'E-commerce', 'Itch.io'],
-        aiKey: 'Tienda E-commerce de Impresiones 3D — Emprendimiento de diseño 3D y ventas online'
+        title:'Tienda 3D — Axis',
+        role:'Fundador · Fabricante Digital',
+        tag:'E-commerce',
+        img:'images/axis3d.jpg',
+        desc:'Emprendimiento personal: diseño CAD propio, manufactura digital, marketing en redes y ventas online. Gestión end-to-end del ciclo de producto.',
+        tech:['Diseño 3D CAD','Manufactura digital','Marketing digital','E-commerce','Itch.io'],
+        key:'Tienda E-commerce de Impresiones 3D — emprendimiento diseño 3D'
     }
 ];
 
-// ── PROJECT MODAL ──
-function openProjectModal(idx) {
-    const p = projects[idx];
-    document.getElementById('modalHeroImg').src = p.img;
-    document.getElementById('modalTag').textContent = p.tag;
-    document.getElementById('modalTitle').textContent = p.title;
-    document.getElementById('modalRole').textContent = p.role;
-    document.getElementById('modalDesc').textContent = p.desc;
-    const techDiv = document.getElementById('modalTech');
-    techDiv.innerHTML = p.tech.map(t => `<span class="skill-pill" style="font-size:0.78rem;"><span class="dot"></span>${t}</span>`).join('');
-    document.getElementById('modalAiResult').classList.add('hidden');
-    document.getElementById('modalAiResult').innerHTML = '';
-    document.getElementById('modalAiBtn').onclick = () => {
-        closeProjectModal();
-        openAI(p.aiKey);
-    };
-    document.getElementById('projectModalOverlay').classList.add('open');
-    document.body.style.overflow = 'hidden';
+/* PROJECT MODAL */
+function openPM(i) {
+    const p = projects[i];
+    document.getElementById('pmImg').src = p.img;
+    document.getElementById('pmTag').textContent = p.tag;
+    document.getElementById('pmTitle').textContent = p.title;
+    document.getElementById('pmRole').textContent = p.role;
+    document.getElementById('pmDesc').textContent = p.desc;
+    document.getElementById('pmTech').innerHTML =
+        p.tech.map(t=>`<span class="pill" style="font-size:.78rem;"><span class="dot"></span>${t}</span>`).join('');
+    const r = document.getElementById('pmAiResult');
+    r.classList.add('hidden'); r.innerHTML='';
+    document.getElementById('pmAiBtn').onclick = () => { closePM(); openAI(p.key); };
+    document.getElementById('pmOverlay').classList.add('open');
+    document.body.style.overflow='hidden';
 }
-
-function closeProjectModal(e) {
-    if (!e || e.target === document.getElementById('projectModalOverlay') || e.target.closest('button.modal-close')) {
-        document.getElementById('projectModalOverlay').classList.remove('open');
-        document.body.style.overflow = '';
-    }
+function closePM() {
+    document.getElementById('pmOverlay').classList.remove('open');
+    document.body.style.overflow='';
 }
+document.getElementById('pmOverlay').addEventListener('click', e => {
+    if(e.target===document.getElementById('pmOverlay')) closePM();
+});
+document.getElementById('pmClose').addEventListener('click', closePM);
 
-async function runModalAI(projectKey) {
-    const btn = document.getElementById('modalAiBtn');
-    const result = document.getElementById('modalAiResult');
-    btn.disabled = true;
-    btn.textContent = '⏳ Analizando...';
-    result.classList.remove('hidden');
-    result.innerHTML = '<div class="loader"></div>';
-    const text = await callGemini(`Actúa como un experto en reclutamiento de tecnología. Genera una descripción profesional y atractiva para un portafolio sobre el proyecto: "${projectKey}". Describe el valor del proyecto, las habilidades demostradas y las tecnologías clave. Formato: párrafo de valor, lista de habilidades, impacto. Responde en español.`);
-    result.innerHTML = markdownToHTML(text);
-    btn.disabled = false;
-    btn.textContent = '✨ Analizar con IA';
-}
-
-// ── AI MODAL ──
-let pendingProjectName = null;
-
-function openAI(projectName) {
-    pendingProjectName = projectName;
-    // Ask user what they do before analyzing
-    const overlay = document.getElementById('aiModalOverlay');
-    document.getElementById('aiModalTitle').textContent = `✨ Antes de analizar...`;
-    document.getElementById('aiModalBody').innerHTML = `
-        <p style="color:var(--text-secondary); line-height:1.7; margin-bottom:16px;">
-            Para personalizar el análisis de <strong style="color:var(--text-primary);">${projectName}</strong>, 
-            ¿a qué te dedicas o qué perfil tienes?
+/* AI MODAL */
+let pendingPrj = null;
+function openAI(name) {
+    pendingPrj = name;
+    document.getElementById('aiTitle').textContent='✨ Antes de analizar...';
+    document.getElementById('aiBody').innerHTML=`
+        <p style="color:var(--ts);line-height:1.7;margin-bottom:16px;">
+            Para personalizar el análisis de <strong style="color:var(--tp);">${name}</strong>, ¿a qué te dedicas?
         </p>
-        <div style="display:flex; gap:8px;">
-            <input id="user-role-input" type="text" class="input-field" placeholder="Ej: soy reclutador, desarrollador, estudiante..." style="flex:1;">
-            <button onclick="proceedWithAI()" class="btn-primary" style="flex-shrink:0;">Analizar →</button>
+        <div style="display:flex;gap:8px;margin-bottom:12px;">
+            <input id="roleInput" type="text" class="input" placeholder="Ej: reclutador, developer, estudiante..." style="flex:1;">
+            <button onclick="doAI()" class="btn-p">Analizar →</button>
         </div>
-        <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:12px;">
-            <button onclick="quickRole('Reclutador de tecnología')" class="btn-secondary" style="font-size:0.75rem; padding:6px 14px;">💼 Reclutador</button>
-            <button onclick="quickRole('Desarrollador de software')" class="btn-secondary" style="font-size:0.75rem; padding:6px 14px;">💻 Dev</button>
-            <button onclick="quickRole('Empresario buscando colaboración')" class="btn-secondary" style="font-size:0.75rem; padding:6px 14px;">🤝 Empresa</button>
-            <button onclick="quickRole('Estudiante curioso')" class="btn-secondary" style="font-size:0.75rem; padding:6px 14px;">🎓 Estudiante</button>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <button onclick="qRole('Reclutador de tecnología')"         class="btn-s" style="font-size:.75rem;padding:6px 14px;">💼 Reclutador</button>
+            <button onclick="qRole('Desarrollador de software')"        class="btn-s" style="font-size:.75rem;padding:6px 14px;">💻 Dev</button>
+            <button onclick="qRole('Empresario buscando colaboración')" class="btn-s" style="font-size:.75rem;padding:6px 14px;">🤝 Empresa</button>
+            <button onclick="qRole('Estudiante curioso')"               class="btn-s" style="font-size:.75rem;padding:6px 14px;">🎓 Estudiante</button>
         </div>
     `;
-    overlay.classList.add('open');
-    document.body.style.overflow = 'hidden';
-    setTimeout(() => document.getElementById('user-role-input')?.focus(), 300);
+    document.getElementById('aiOverlay').classList.add('open');
+    document.body.style.overflow='hidden';
+    setTimeout(()=>document.getElementById('roleInput')?.focus(),300);
 }
-
-function quickRole(role) {
-    document.getElementById('user-role-input').value = role;
-    proceedWithAI();
-}
-
-function proceedWithAI() {
-    const role = document.getElementById('user-role-input')?.value.trim() || 'visitante';
-    const projectName = pendingProjectName;
-    document.getElementById('aiModalTitle').textContent = `✨ Analizando: ${projectName}`;
-    document.getElementById('aiModalBody').innerHTML = '<div class="loader"></div>';
-    const prompt = `Actúa como un experto en reclutamiento de tecnología. El visitante del portafolio dice ser: "${role}". Personaliza tu respuesta para ese perfil. Genera una descripción profesional del proyecto: "${projectName}". Incluye: valor del proyecto para ese perfil, habilidades demostradas, tecnologías, y termina con "¿En qué te puedo ayudar?" adaptado a ese perfil. Responde en español con formato Markdown.`;
-    callGemini(prompt).then(text => {
-        document.getElementById('aiModalTitle').textContent = `✨ ${projectName}`;
-        document.getElementById('aiModalBody').innerHTML = `<div class="ai-content">${markdownToHTML(text)}</div>`;
+function qRole(r) { const inp=document.getElementById('roleInput'); if(inp) inp.value=r; doAI(); }
+function doAI() {
+    const role = document.getElementById('roleInput')?.value.trim()||'visitante';
+    document.getElementById('aiTitle').textContent=`✨ Analizando: ${pendingPrj}`;
+    document.getElementById('aiBody').innerHTML='<div class="loader"></div>';
+    const prompt=`Actúa como un experto en reclutamiento de tecnología. El visitante dice ser: "${role}". Personaliza para ese perfil. Describe el proyecto: "${pendingPrj}". Incluye: valor para ese perfil, habilidades, tecnologías, y termina con "¿En qué te puedo ayudar?" adaptado. Responde en español con Markdown.`;
+    callGemini(prompt).then(t=>{
+        document.getElementById('aiTitle').textContent=`✨ ${pendingPrj}`;
+        document.getElementById('aiBody').innerHTML=`<div class="aic">${md(t)}</div>`;
     });
 }
-
-function closeAIModal(e) {
-    if (!e || e.target === document.getElementById('aiModalOverlay') || e.target.closest('button')) {
-        document.getElementById('aiModalOverlay').classList.remove('open');
-        document.body.style.overflow = '';
-    }
+function closeAI() {
+    document.getElementById('aiOverlay').classList.remove('open');
+    document.body.style.overflow='';
 }
+document.getElementById('aiOverlay').addEventListener('click',e=>{
+    if(e.target===document.getElementById('aiOverlay')) closeAI();
+});
+document.getElementById('aiClose').addEventListener('click', closeAI);
 
-// ── ICEBREAKER ──
-document.getElementById('icebreaker-btn').addEventListener('click', async () => {
-    const topic = document.getElementById('icebreaker-input').value.trim();
-    if (!topic) return;
-    const overlay = document.getElementById('aiModalOverlay');
-    document.getElementById('aiModalTitle').textContent = `✨ Rompehielos: ${topic}`;
-    document.getElementById('aiModalBody').innerHTML = '<div class="loader"></div>';
-    overlay.classList.add('open');
-    document.body.style.overflow = 'hidden';
-    const text = await callGemini(`Eres un creativo iniciador de conversaciones. Un visitante de un portafolio quiere hablar sobre "${topic}". Genera una pregunta interesante o dato curioso relacionado para romper el hielo. Breve, memorable y divertido. Responde en español.`);
-    document.getElementById('aiModalBody').innerHTML = `<p style="font-size:1.1rem; line-height:1.8; color:var(--text-secondary);">${text}</p>`;
-    document.getElementById('icebreaker-input').value = '';
+/* ICEBREAKER */
+document.getElementById('iceBtn').addEventListener('click', async ()=>{
+    const t=document.getElementById('iceInput').value.trim();
+    if(!t) return;
+    document.getElementById('aiTitle').textContent=`✨ Rompehielos: ${t}`;
+    document.getElementById('aiBody').innerHTML='<div class="loader"></div>';
+    document.getElementById('aiOverlay').classList.add('open');
+    document.body.style.overflow='hidden';
+    const txt=await callGemini(`Eres un creativo iniciador de conversaciones. Un visitante quiere hablar sobre "${t}". Genera una pregunta interesante o dato curioso para romper el hielo. Breve, memorable, divertido. En español.`);
+    document.getElementById('aiBody').innerHTML=`<p style="font-size:1.05rem;line-height:1.8;color:var(--ts);">${txt}</p>`;
+    document.getElementById('iceInput').value='';
 });
 
-// ── GEMINI API ──
-async function callGemini(prompt, retries = 3, delay = 1000) {
-    const apiKey = "AIzaSyAv-7wlkNjGQvPj0DCp6WnukcOvv1YV7WU";
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
-    try {
-        const res = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: prompt }] }] })
-        });
-        if (!res.ok) {
-            if (res.status === 429 && retries > 0) { await sleep(delay); return callGemini(prompt, retries-1, delay*2); }
-            throw new Error(res.status);
+/* GEMINI */
+async function callGemini(prompt,retries=3,delay=1000){
+    const key="AIzaSyAv-7wlkNjGQvPj0DCp6WnukcOvv1YV7WU";
+    const url=`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${key}`;
+    try{
+        const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({contents:[{role:'user',parts:[{text:prompt}]}]})});
+        if(!r.ok){
+            if(r.status===429&&retries>0){await sleep(delay);return callGemini(prompt,retries-1,delay*2);}
+            throw new Error(r.status);
         }
-        const data = await res.json();
-        return data.candidates?.[0]?.content?.parts?.[0]?.text || 'Sin respuesta.';
-    } catch(e) {
-        if (retries > 0) { await sleep(delay); return callGemini(prompt, retries-1, delay*2); }
-        return 'Error al contactar la IA. Inténtalo de nuevo.';
+        const d=await r.json();
+        return d.candidates?.[0]?.content?.parts?.[0]?.text||'Sin respuesta.';
+    }catch(e){
+        if(retries>0){await sleep(delay);return callGemini(prompt,retries-1,delay*2);}
+        return 'Error al contactar la IA.';
     }
 }
-
-// ── EXPOSE GLOBALS (needed for inline onclick handlers) ──
-window.openProjectModal = openProjectModal;
-window.closeProjectModal = closeProjectModal;
-window.openAI = openAI;
-window.closeAIModal = closeAIModal;
-window.proceedWithAI = proceedWithAI;
-window.quickRole = quickRole;
-window.runModalAI = runModalAI;
-
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-function markdownToHTML(md) {
-    return md
-        .replace(/## (.*)/g, '<h2>$1</h2>')
-        .replace(/### (.*)/g, '<h3>$1</h3>')
-        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\*(.*?)\*/g, '<em>$1</em>')
-        .replace(/^- (.*)/gm, '<li>$1</li>')
-        .replace(/<li>/g, '<ul><li>').replace(/<\/li>\n<ul>/g, '</li>')
-        .replace(/\n\n/g, '</p><p>')
-        .replace(/^(?!<[hul])/gm, '<p>').replace(/<p><\/p>/g, '');
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+function md(s){
+    return s
+        .replace(/## (.*)/g,'<h2>$1</h2>')
+        .replace(/### (.*)/g,'<h3>$1</h3>')
+        .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g,'<em>$1</em>')
+        .replace(/^- (.*)/gm,'<li>$1</li>')
+        .replace(/(<li>.*?<\/li>)/gs,'<ul>$1</ul>')
+        .replace(/\n\n/g,'</p><p>')
+        .replace(/^(?!<[hpul])/gm,'<p>')
+        .replace(/<p><\/p>/g,'');
 }
 
-// ── SCROLL REVEAL ──
-const reveals = document.querySelectorAll('.reveal');
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
-}, { threshold: 0.12 });
-reveals.forEach(r => observer.observe(r));
+/* GLOBAL HANDLERS (inline onclick) */
+window.openPM=openPM; window.openAI=openAI;
+window.qRole=qRole;   window.doAI=doAI;
 
-// ── HEADER SCROLL ──
-const header = document.getElementById('header');
-window.addEventListener('scroll', () => {
-    header.classList.toggle('scrolled', window.scrollY > 40);
-    // Active nav
-    const sections = ['about','skills','projects','contact'];
-    const scrollY = window.scrollY + 100;
-    sections.forEach(id => {
-        const sec = document.getElementById(id);
-        const link = document.querySelector(`.nav-link[href="#${id}"]`);
-        if (!sec || !link) return;
-        if (scrollY >= sec.offsetTop && scrollY < sec.offsetTop + sec.offsetHeight) {
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-            link.classList.add('active');
+/* SCROLL REVEAL */
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+/* HEADER */
+const hdr=document.getElementById('header');
+window.addEventListener('scroll',()=>{
+    hdr.classList.toggle('scrolled',scrollY>40);
+    const sy=scrollY+120;
+    ['about','skills','projects','contact'].forEach(id=>{
+        const s=document.getElementById(id);
+        const l=document.querySelector(`.nav-link[href="#${id}"]`);
+        if(!s||!l)return;
+        if(sy>=s.offsetTop&&sy<s.offsetTop+s.offsetHeight){
+            document.querySelectorAll('.nav-link').forEach(x=>x.classList.remove('active'));
+            l.classList.add('active');
         }
     });
+},{passive:true});
+
+/* MOBILE MENU */
+const mm=document.getElementById('mobile-menu');
+document.getElementById('menuBtn').addEventListener('click',()=>mm.classList.toggle('open'));
+mm.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>mm.classList.remove('open')));
+
+/* CURSOR */
+const dot=document.getElementById('cursorDot'),ring=document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';},{passive:true});
+(function ac(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(ac);})();
+document.querySelectorAll('a,button,.pcard,.pill').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{ring.style.width='56px';ring.style.height='56px';ring.style.opacity='1';});
+    el.addEventListener('mouseleave',()=>{ring.style.width='36px';ring.style.height='36px';ring.style.opacity='.6';});
 });
 
-// ── MOBILE MENU ──
-document.getElementById('menu-btn').addEventListener('click', () => {
-    document.getElementById('mobile-menu').classList.toggle('hidden');
-});
-document.querySelectorAll('#mobile-menu a').forEach(a => {
-    a.addEventListener('click', () => document.getElementById('mobile-menu').classList.add('hidden'));
-});
-
-// ── CUSTOM CURSOR ──
-const dot = document.getElementById('cursorDot');
-const ring = document.getElementById('cursorRing');
-let mx = 0, my = 0, rx = 0, ry = 0;
-document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.left = mx+'px'; dot.style.top = my+'px'; });
-function animateCursor() {
-    rx += (mx - rx) * 0.12;
-    ry += (my - ry) * 0.12;
-    ring.style.left = rx+'px';
-    ring.style.top = ry+'px';
-    requestAnimationFrame(animateCursor);
-}
-animateCursor();
-document.querySelectorAll('a, button, .project-card, .skill-pill').forEach(el => {
-    el.addEventListener('mouseenter', () => { ring.style.width = '56px'; ring.style.height = '56px'; ring.style.opacity = '1'; });
-    el.addEventListener('mouseleave', () => { ring.style.width = '36px'; ring.style.height = '36px'; ring.style.opacity = '0.6'; });
-});
-
-// ── PARTICLES ──
-(function() {
-    const canvas = document.getElementById('particles');
-    const ctx = canvas.getContext('2d');
-    let W, H, particles = [];
-    const N = 60;
-
-    function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-    window.addEventListener('resize', resize);
-    resize();
-
-    for (let i = 0; i < N; i++) {
-        particles.push({
-            x: Math.random() * W, y: Math.random() * H,
-            vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3,
-            r: Math.random() * 1.5 + 0.3,
-            a: Math.random() * 0.4 + 0.1
-        });
-    }
-
-    function draw() {
-        ctx.clearRect(0, 0, W, H);
-        particles.forEach((p, i) => {
-            p.x += p.vx; p.y += p.vy;
-            if (p.x < 0 || p.x > W) p.vx *= -1;
-            if (p.y < 0 || p.y > H) p.vy *= -1;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(236, 14, 107, ${p.a})`;
-            ctx.fill();
-            // Lines to close particles
-            for (let j = i+1; j < particles.length; j++) {
-                const q = particles[j];
-                const dx = p.x - q.x, dy = p.y - q.y;
-                const dist = Math.sqrt(dx*dx + dy*dy);
-                if (dist < 120) {
-                    ctx.beginPath();
-                    ctx.moveTo(p.x, p.y);
+/* PARTICLES */
+(function(){
+    const cv=document.getElementById('particles'),ctx=cv.getContext('2d');
+    let W,H;const pts=[];const N=60;
+    function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight;}
+    window.addEventListener('resize',resize,{passive:true});resize();
+    for(let i=0;i<N;i++)pts.push({x:Math.random()*W,y:Math.random()*H,
+        vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,
+        r:Math.random()*1.5+.3,a:Math.random()*.4+.1});
+    function draw(){
+        ctx.clearRect(0,0,W,H);
+        pts.forEach((p,i)=>{
+            p.x+=p.vx;p.y+=p.vy;
+            if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;
+            ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+            ctx.fillStyle=`rgba(236,14,107,${p.a})`;ctx.fill();
+            for(let j=i+1;j<pts.length;j++){
+                const q=pts[j],dx=p.x-q.x,dy=p.y-q.y,d=Math.sqrt(dx*dx+dy*dy);
+                if(d<120){ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);
+                    ctx.strokeStyle=`rgba(236,14,107,${.06*(1-d/120)})`;ctx.lineWidth=.5;ctx.stroke();}
+            }
+        });requestAnimationFrame(draw);
+    }draw();
+})();
+</script>
+</body>
+</html>
