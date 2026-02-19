@@ -334,7 +334,13 @@
             border: 1px solid rgba(236,14,107,.3);
             border-radius: 16px; z-index: -1;
         }
-        .img-frame img { border-radius: 12px; width: 100%; }
+        .img-frame img {
+            border-radius: 12px;
+            width: 100%;
+            max-height: 480px;
+            object-fit: cover;
+            object-position: center top;
+        }
 
         .about-text p {
             color: var(--ts); font-size: 1.05rem;
