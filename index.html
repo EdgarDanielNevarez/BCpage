@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BC — Edgar Daniel Chaparro Nevarez</title>
-    <meta name="description" content="Portafolio de BC, Ingeniero de Software, desarrollador de videojuegos, creador de bots de IA y emprendedor.">
+    <meta name="description" content="Portafolio de BC — Ingeniero en Sistemas Computacionales, desarrollador full-stack, creador de soluciones empresariales y emprendedor digital.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <!-- Anime.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
     <style>
         /* ═══════════════════════════════════
            RESET
@@ -65,23 +67,25 @@
         #particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 
         /* ═══════════════════════════════════
-           CURSOR
+           CURSOR (solo desktop)
         ═══════════════════════════════════ */
-        .cursor-dot {
-            width: 8px; height: 8px;
-            background: var(--accent); border-radius: 50%;
-            position: fixed; top: 0; left: 0;
-            pointer-events: none; z-index: 9999;
-            transform: translate(-50%,-50%);
-        }
-        .cursor-ring {
-            width: 36px; height: 36px;
-            border: 1.5px solid var(--accent); border-radius: 50%;
-            position: fixed; top: 0; left: 0;
-            pointer-events: none; z-index: 9998;
-            transform: translate(-50%,-50%);
-            transition: width .2s, height .2s, opacity .2s;
-            opacity: .6;
+        @media (hover: hover) and (pointer: fine) {
+            .cursor-dot {
+                width: 8px; height: 8px;
+                background: var(--accent); border-radius: 50%;
+                position: fixed; top: 0; left: 0;
+                pointer-events: none; z-index: 9999;
+                transform: translate(-50%,-50%);
+            }
+            .cursor-ring {
+                width: 36px; height: 36px;
+                border: 1.5px solid var(--accent); border-radius: 50%;
+                position: fixed; top: 0; left: 0;
+                pointer-events: none; z-index: 9998;
+                transform: translate(-50%,-50%);
+                transition: width .2s, height .2s, opacity .2s;
+                opacity: .6;
+            }
         }
 
         /* ═══════════════════════════════════
@@ -102,7 +106,7 @@
         }
         .section-title {
             font-family: 'Syne', sans-serif;
-            font-size: clamp(2rem,4vw,3rem);
+            font-size: clamp(1.8rem,4vw,3rem);
             font-weight: 800; line-height: 1.1;
         }
 
@@ -131,7 +135,7 @@
             transition: background .4s, border-color .4s;
         }
         header.scrolled {
-            background: rgba(13,14,17,.88);
+            background: rgba(13,14,17,.92);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--lt);
         }
@@ -178,14 +182,15 @@
         #mobile-menu.open { display: block; }
         #mobile-menu a {
             display: block;
-            padding: .75rem 1.5rem;
+            padding: .9rem 1.5rem;
             color: var(--ts);
             font-family: 'Syne', sans-serif;
-            font-size: .85rem; letter-spacing: .08em;
+            font-size: .9rem; letter-spacing: .08em;
             text-transform: uppercase;
-            transition: color .3s;
+            border-bottom: 1px solid rgba(42,45,53,.5);
+            transition: color .3s, background .3s;
         }
-        #mobile-menu a:hover { color: var(--accent); }
+        #mobile-menu a:hover { color: var(--accent); background: rgba(236,14,107,.05); }
 
         @media (max-width: 767px) {
             .nav-links { display: none; }
@@ -204,12 +209,13 @@
             position: relative; z-index: 1;
             text-align: center;
             padding-top: 5rem;
+            padding-bottom: 4rem;
         }
         .avatar-wrap {
             position: relative;
             display: inline-block;
             margin-top: 2.5rem; margin-bottom: 2rem;
-            animation: fade-in-scale 1s .6s both;
+            opacity: 0;
         }
         .avatar-wrap::before {
             content: '';
@@ -225,28 +231,18 @@
             border: 4px solid var(--dk);
         }
         @media (min-width: 768px) { .avatar-wrap img { width: 10rem; height: 10rem; } }
-        @keyframes fade-in-scale { from{opacity:0;transform:scale(.8)} to{opacity:1;transform:scale(1)} }
         @keyframes spin-slow { to { transform: rotate(360deg); } }
 
         .hero-line { overflow: hidden; }
-        .hero-line span {
-            display: block;
-            transform: translateY(120%);
-            animation: slide-up .8s cubic-bezier(.22,1,.36,1) forwards;
-        }
-        @keyframes slide-up { to { transform: translateY(0); } }
-        .hero-line:nth-child(1) span { animation-delay: .10s; }
-        .hero-line:nth-child(2) span { animation-delay: .25s; }
-        .hero-line:nth-child(3) span { animation-delay: .40s; }
-        .hero-line:nth-child(4) span { animation-delay: .55s; }
+        .hero-line span { display: block; opacity: 0; transform: translateY(40px); }
 
         .hero-name {
-            font-size: clamp(2.4rem,7vw,5rem);
+            font-size: clamp(2rem,7vw,5rem);
             font-weight: 900; line-height: 1.05;
             margin-top: .4rem;
         }
         .hero-sub {
-            color: var(--ts); font-size: 1.1rem;
+            color: var(--ts); font-size: clamp(.95rem,2vw,1.1rem);
             margin-top: 1.1rem;
         }
         .hero-cta {
@@ -344,10 +340,8 @@
         }
         .img-frame img {
             border-radius: 12px;
-            width: 100%;
-            height: auto;
-            object-fit: contain;
-            display: block;
+            width: 100%; height: auto;
+            object-fit: contain; display: block;
         }
 
         .about-text p {
@@ -361,6 +355,29 @@
         .stat { border-left: 2px solid var(--accent); padding-left: 1rem; }
         .stat-n { font-family: 'Syne',sans-serif; font-size:1.8rem; font-weight:800; }
         .stat-l { color: var(--ts); font-size: .82rem; margin-top: 2px; }
+
+        /* Badge "en desarrollo" */
+        .badge-dev {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(236,14,107,.12);
+            border: 1px solid rgba(236,14,107,.35);
+            color: var(--accent);
+            font-family: 'Syne',sans-serif;
+            font-size: .72rem; letter-spacing: .1em; text-transform: uppercase;
+            padding: 4px 12px; border-radius: 100px;
+            margin-bottom: 1.2rem;
+        }
+        .badge-dev::before {
+            content: '';
+            width: 6px; height: 6px; border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 8px var(--accent);
+            animation: pulse-dot 1.5s infinite;
+        }
+        @keyframes pulse-dot {
+            0%,100%{opacity:1;transform:scale(1)}
+            50%{opacity:.4;transform:scale(.7)}
+        }
 
         /* ═══════════════════════════════════
            SKILLS
@@ -408,8 +425,11 @@
         .proj-hd p { color: var(--ts); margin-top: .75rem; }
         .proj-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
-            gap: 28px;
+            grid-template-columns: repeat(auto-fill, minmax(280px,1fr));
+            gap: 24px;
+        }
+        @media (max-width: 480px) {
+            .proj-grid { grid-template-columns: 1fr; gap: 20px; }
         }
         .pcard {
             border-radius: 16px; overflow: hidden;
@@ -425,7 +445,7 @@
         }
         .pcard-imgwrap { overflow: hidden; position: relative; }
         .pcard-img {
-            width: 100%; height: 220px;
+            width: 100%; height: 200px;
             object-fit: cover; display: block;
             filter: brightness(.7) saturate(.8);
             transition: filter .4s, transform .5s;
@@ -439,10 +459,28 @@
             text-transform: uppercase;
             padding: 4px 10px; border-radius: 100px;
         }
-        .pcard-body { padding: 24px; }
+        .pcard-status {
+            position: absolute; top: 12px; right: 12px;
+            background: rgba(13,14,17,.75);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(236,14,107,.4);
+            color: var(--accent);
+            font-family: 'Syne',sans-serif;
+            font-size: .65rem; letter-spacing: .1em;
+            text-transform: uppercase;
+            padding: 4px 10px; border-radius: 100px;
+            display: flex; align-items: center; gap: 5px;
+        }
+        .pcard-status::before {
+            content: '';
+            width: 5px; height: 5px; border-radius: 50%;
+            background: var(--accent);
+            animation: pulse-dot 1.5s infinite;
+        }
+        .pcard-body { padding: 22px; }
         .pcard-body h3 {
             font-family: 'Syne',sans-serif;
-            font-size: 1.1rem; font-weight: 700;
+            font-size: 1.05rem; font-weight: 700;
             color: var(--tp); margin-bottom: 6px;
         }
         .pcard-role {
@@ -467,48 +505,77 @@
         .contact-box {
             background: var(--dk);
             border: 1px solid var(--lt);
-            border-radius: 20px; padding: 3rem;
+            border-radius: 20px; padding: 2.5rem;
         }
-        .ice-lbl {
-            font-family: 'Syne',sans-serif;
-            font-size: .82rem; color: var(--ts);
-            text-transform: uppercase; letter-spacing: .1em;
-            margin-bottom: 12px;
+        @media (max-width: 480px) {
+            .contact-box { padding: 1.5rem; }
         }
-        .ice-row { display: flex; gap: .5rem; margin-bottom: 2rem; }
-        .input {
-            flex: 1; min-width: 0;
-            background: var(--md); border: 1px solid var(--lt);
-            border-radius: 100px; padding: 12px 24px;
-            color: var(--tp); font-family: 'DM Sans',sans-serif;
-            font-size: .95rem; outline: none;
+
+        /* Teléfono */
+        .phone-row {
+            display: flex; align-items: center; gap: 1rem;
+            margin-bottom: 2rem;
+            padding: 1.1rem 1.5rem;
+            background: var(--md);
+            border: 1px solid var(--lt);
+            border-radius: 14px;
             transition: border-color .3s, box-shadow .3s;
         }
-        .input:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(236,14,107,.15);
+        .phone-row:hover {
+            border-color: rgba(236,14,107,.4);
+            box-shadow: 0 8px 32px rgba(236,14,107,.1);
         }
+        .phone-icon {
+            width: 44px; height: 44px; flex-shrink: 0;
+            border-radius: 50%;
+            background: rgba(236,14,107,.12);
+            border: 1px solid rgba(236,14,107,.3);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--accent);
+        }
+        .phone-info { flex: 1; min-width: 0; }
+        .phone-lbl {
+            font-family: 'Syne',sans-serif;
+            font-size: .7rem; letter-spacing: .12em;
+            text-transform: uppercase; color: var(--ts);
+        }
+        .phone-num {
+            font-family: 'Syne',sans-serif;
+            font-size: 1.1rem; font-weight: 700;
+            color: var(--tp);
+            letter-spacing: .04em;
+        }
+        @media (max-width: 380px) {
+            .phone-num { font-size: .95rem; }
+        }
+
         .contact-actions {
-            display: flex; flex-wrap: wrap;
-            align-items: center; justify-content: space-between;
-            gap: 1rem;
+            display: flex; flex-direction: column;
+            gap: 1.25rem;
         }
-        .contact-actions .btn-p { font-size: .95rem; padding: 14px 32px; }
-        .social-row { display: flex; gap: .75rem; }
+        .contact-actions-lbl {
+            font-family: 'Syne',sans-serif;
+            font-size: .75rem; color: var(--ts);
+            text-transform: uppercase; letter-spacing: .12em;
+        }
+        .social-row {
+            display: flex; gap: .75rem; flex-wrap: wrap;
+        }
         .social-btn {
-            width: 48px; height: 48px;
+            width: 52px; height: 52px;
             border-radius: 50%;
             border: 1px solid var(--lt);
             display: flex; align-items: center; justify-content: center;
             color: var(--ts);
-            transition: border-color .3s, color .3s, transform .3s, box-shadow .3s;
+            transition: border-color .3s, color .3s, transform .3s, box-shadow .3s, background .3s;
         }
         .social-btn:hover {
             border-color: var(--accent); color: var(--accent);
+            background: rgba(236,14,107,.08);
             transform: translateY(-4px) scale(1.1);
             box-shadow: 0 8px 20px var(--glow);
         }
-        .social-btn svg { width: 1.2rem; height: 1.2rem; }
+        .social-btn svg { width: 1.25rem; height: 1.25rem; }
 
         /* ═══════════════════════════════════
            FOOTER
@@ -531,7 +598,7 @@
             z-index: 200; opacity: 0; pointer-events: none;
             transition: opacity .35s;
             display: flex; align-items: center; justify-content: center;
-            padding: 20px;
+            padding: 16px;
         }
         .pm-overlay.open { opacity: 1; pointer-events: all; }
         .pm-box {
@@ -543,7 +610,8 @@
             transition: transform .4s cubic-bezier(.22,1,.36,1);
         }
         .pm-overlay.open .pm-box { transform: scale(1) translateY(0); }
-        .pm-hero { position: relative; height: 260px; }
+        .pm-hero { position: relative; height: 220px; }
+        @media (min-width: 600px) { .pm-hero { height: 260px; } }
         .pm-hero img {
             width: 100%; height: 100%; object-fit: cover;
             border-radius: 20px 20px 0 0;
@@ -554,7 +622,8 @@
             background: linear-gradient(to top, var(--md) 10%, transparent 70%);
             border-radius: 20px 20px 0 0;
         }
-        .pm-body { padding: 32px; }
+        .pm-body { padding: 24px; }
+        @media (min-width: 600px) { .pm-body { padding: 32px; } }
         .pm-tag {
             display: inline-block;
             background: var(--accent); color: #fff;
@@ -563,9 +632,9 @@
             padding: 4px 10px; border-radius: 100px;
             margin-bottom: 16px;
         }
-        .pm-tech { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 2rem; }
+        .pm-tech { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.5rem; }
         .m-close {
-            position: absolute; top: 16px; right: 16px;
+            position: absolute; top: 12px; right: 12px;
             width: 36px; height: 36px;
             background: rgba(0,0,0,.55);
             border: none; border-radius: 50%;
@@ -576,59 +645,10 @@
         }
         .m-close:hover { background: var(--accent); }
 
-        /* ═══════════════════════════════════
-           AI MODAL
-        ═══════════════════════════════════ */
-        .ai-overlay {
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,.82);
-            backdrop-filter: blur(8px);
-            z-index: 300; opacity: 0; pointer-events: none;
-            transition: opacity .3s;
-            display: flex; align-items: center; justify-content: center;
-            padding: 20px;
-        }
-        .ai-overlay.open { opacity: 1; pointer-events: all; }
-        .ai-box {
-            position: relative;
-            background: var(--md); border: 1px solid var(--lt);
-            border-radius: 16px;
-            max-width: 640px; width: 100%;
-            padding: 2.5rem;
-            transform: scale(.93);
-            transition: transform .35s cubic-bezier(.22,1,.36,1);
-            max-height: 85vh; overflow-y: auto;
-        }
-        .ai-overlay.open .ai-box { transform: scale(1); }
-        .ai-box h3 {
-            font-family: 'Syne',sans-serif;
-            font-size: 1.25rem; font-weight: 800;
-            margin-bottom: 1.25rem;
-        }
-
-        /* ═══════════════════════════════════
-           LOADER
-        ═══════════════════════════════════ */
-        .loader {
-            width: 36px; height: 36px;
-            border: 3px solid var(--lt);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin .8s linear infinite;
-            margin: 24px auto;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* ═══════════════════════════════════
-           AI CONTENT MARKDOWN
-        ═══════════════════════════════════ */
-        .aic h2 { font-family:'Syne',sans-serif; font-size:1.05rem; font-weight:700; color:var(--tp); margin:16px 0 8px; }
-        .aic h3 { font-family:'Syne',sans-serif; font-size:.95rem;  font-weight:700; color:var(--accent); margin:12px 0 6px; }
-        .aic ul { list-style:disc; padding-left:20px; color:var(--ts); line-height:1.8; }
-        .aic p  { color:var(--ts); line-height:1.8; margin-bottom:10px; }
-        .aic strong { color:var(--tp); }
-        .hidden { display: none !important; }
-        .ai-sep { border-top: 1px solid var(--lt); padding-top: 20px; margin-top: 1rem; }
+        /* Responsive scrollbar */
+        .pm-box::-webkit-scrollbar { width: 4px; }
+        .pm-box::-webkit-scrollbar-track { background: transparent; }
+        .pm-box::-webkit-scrollbar-thumb { background: var(--lt); border-radius: 99px; }
     </style>
 </head>
 <body>
@@ -666,22 +686,22 @@
 <!-- ══ HERO ══ -->
 <section id="hero">
     <div class="hero-inner container">
-        <div class="avatar-wrap">
+        <div class="avatar-wrap" id="heroAvatar">
             <img src="images/Logo.png" alt="BC Logo">
         </div>
         <div class="hero-line">
-            <span class="section-label">Ingeniero de Software · Creador Digital</span>
+            <span id="hl1" class="section-label">Ingeniero en Sistemas · Desarrollador Full-Stack</span>
         </div>
         <div class="hero-line" style="margin-top:.4rem;">
-            <span class="hero-name">
+            <span id="hl2" class="hero-name">
                 <span class="text-gradient">Edgar Daniel</span><br>Chaparro Nevarez
             </span>
         </div>
         <div class="hero-line">
-            <span class="hero-sub">Programando diversión, una línea de código a la vez.</span>
+            <span id="hl3" class="hero-sub">Construyendo soluciones reales, una línea de código a la vez.</span>
         </div>
         <div class="hero-line">
-            <span class="hero-cta">
+            <span id="hl4" class="hero-cta">
                 <a href="#projects" class="btn-p">
                     Ver Proyectos
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -701,19 +721,31 @@
 <!-- ══ MARQUEE ══ -->
 <div class="marquee-wrap">
     <div class="marquee-track">
-        <span class="marquee-item">Python</span><span class="marquee-item">C#</span>
-        <span class="marquee-item">JavaScript</span><span class="marquee-item">Google Gemini AI</span>
-        <span class="marquee-item">Discord Bots</span><span class="marquee-item">React</span>
-        <span class="marquee-item">Rive</span><span class="marquee-item">Full-Stack</span>
-        <span class="marquee-item">Diseño 3D</span><span class="marquee-item">SQL</span>
-        <span class="marquee-item">tModLoader</span><span class="marquee-item">E-commerce</span>
-        <!-- dupe for loop -->
-        <span class="marquee-item">Python</span><span class="marquee-item">C#</span>
-        <span class="marquee-item">JavaScript</span><span class="marquee-item">Google Gemini AI</span>
-        <span class="marquee-item">Discord Bots</span><span class="marquee-item">React</span>
-        <span class="marquee-item">Rive</span><span class="marquee-item">Full-Stack</span>
-        <span class="marquee-item">Diseño 3D</span><span class="marquee-item">SQL</span>
-        <span class="marquee-item">tModLoader</span><span class="marquee-item">E-commerce</span>
+        <span class="marquee-item">Python</span>
+        <span class="marquee-item">C#</span>
+        <span class="marquee-item">JavaScript</span>
+        <span class="marquee-item">Facturación Web</span>
+        <span class="marquee-item">Full-Stack</span>
+        <span class="marquee-item">SQL</span>
+        <span class="marquee-item">Diseño 3D</span>
+        <span class="marquee-item">E-commerce</span>
+        <span class="marquee-item">Cisco · CCNA</span>
+        <span class="marquee-item">Arduino</span>
+        <span class="marquee-item">React</span>
+        <span class="marquee-item">Sistemas Empresariales</span>
+        <!-- dupe -->
+        <span class="marquee-item">Python</span>
+        <span class="marquee-item">C#</span>
+        <span class="marquee-item">JavaScript</span>
+        <span class="marquee-item">Facturación Web</span>
+        <span class="marquee-item">Full-Stack</span>
+        <span class="marquee-item">SQL</span>
+        <span class="marquee-item">Diseño 3D</span>
+        <span class="marquee-item">E-commerce</span>
+        <span class="marquee-item">Cisco · CCNA</span>
+        <span class="marquee-item">Arduino</span>
+        <span class="marquee-item">React</span>
+        <span class="marquee-item">Sistemas Empresariales</span>
     </div>
 </div>
 
@@ -731,16 +763,31 @@
                 <h2 class="section-title rd1 reveal" style="margin-bottom:1.5rem;">
                     Desarrollador con <span class="text-gradient">visión completa</span>
                 </h2>
+
+                <span class="badge-dev reveal rd1">En desarrollo activo · Proyecto Madesa</span>
+
                 <p class="reveal rd2">
-                    Ingeniero de Software innovador y autodidacta con un portafolio robusto de proyectos de ciclo completo, desde aplicaciones empresariales seguras y bots de IA conversacional hasta la gestión de comunidades de videojuegos y emprendimientos de e-commerce.
+                    Ingeniero en Sistemas Computacionales con experiencia práctica en desarrollo full-stack, gestión de e-commerce y administración de redes. Especialista en Python, bases de datos SQL seguras y configuración de infraestructura con tecnología Cisco.
+                </p>
+                <p class="reveal rd3">
+                    Actualmente me encuentro desarrollando una <strong style="color:var(--tp);">plataforma web integral</strong> para la PYME <strong style="color:var(--accent);">Madesa</strong>: un sistema de facturación, cotización y página de ventas que moderniza y digitaliza sus procesos administrativos y comerciales de extremo a extremo.
                 </p>
                 <p class="reveal rd3">
                     Apasionado por transformar ideas complejas en soluciones tecnológicas elegantes, funcionales y centradas en el usuario.
                 </p>
                 <div class="stats reveal rd4">
-                    <div class="stat"><div class="stat-n">3+</div><div class="stat-l">Proyectos completos</div></div>
-                    <div class="stat"><div class="stat-n">∞</div><div class="stat-l">Líneas de código</div></div>
-                    <div class="stat"><div class="stat-n">100%</div><div class="stat-l">Autodidacta</div></div>
+                    <div class="stat">
+                        <div class="stat-n" data-count="4">0</div>
+                        <div class="stat-l">Proyectos completos</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-n">∞</div>
+                        <div class="stat-l">Líneas de código</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-n">100%</div>
+                        <div class="stat-l">Autodidacta</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -759,38 +806,48 @@
             <div class="pills">
                 <span class="pill"><span class="dot"></span>Python</span>
                 <span class="pill"><span class="dot"></span>C#</span>
+                <span class="pill"><span class="dot"></span>Java</span>
                 <span class="pill"><span class="dot"></span>JavaScript</span>
                 <span class="pill"><span class="dot"></span>SQL</span>
                 <span class="pill"><span class="dot"></span>HTML / CSS</span>
             </div>
         </div>
         <div class="skill-group reveal rd2">
-            <span class="skill-group-lbl">Inteligencia Artificial</span>
+            <span class="skill-group-lbl">Bases de Datos</span>
             <div class="pills">
-                <span class="pill"><span class="dot"></span>Google Gemini API</span>
-                <span class="pill"><span class="dot"></span>Ingeniería de Prompts</span>
-                <span class="pill"><span class="dot"></span>Diseño Conversacional</span>
+                <span class="pill"><span class="dot"></span>MySQL</span>
+                <span class="pill"><span class="dot"></span>SQLite</span>
+                <span class="pill"><span class="dot"></span>SQL cifrado</span>
+                <span class="pill"><span class="dot"></span>Diseño de esquemas</span>
             </div>
         </div>
         <div class="skill-group reveal rd3">
             <span class="skill-group-lbl">Frameworks &amp; Herramientas</span>
             <div class="pills">
-                <span class="pill"><span class="dot"></span>Discord.py</span>
                 <span class="pill"><span class="dot"></span>React</span>
-                <span class="pill"><span class="dot"></span>Rive</span>
-                <span class="pill"><span class="dot"></span>tModLoader</span>
                 <span class="pill"><span class="dot"></span>.NET</span>
                 <span class="pill"><span class="dot"></span>Git / GitHub</span>
+                <span class="pill"><span class="dot"></span>Excel (automatización)</span>
                 <span class="pill"><span class="dot"></span>Visual Studio</span>
+                <span class="pill"><span class="dot"></span>Packet Tracer</span>
+            </div>
+        </div>
+        <div class="skill-group reveal rd3">
+            <span class="skill-group-lbl">Redes &amp; Hardware</span>
+            <div class="pills">
+                <span class="pill"><span class="dot"></span>Cisco · CCNA</span>
+                <span class="pill"><span class="dot"></span>Configuración de redes</span>
+                <span class="pill"><span class="dot"></span>Arduino</span>
             </div>
         </div>
         <div class="skill-group reveal rd4">
-            <span class="skill-group-lbl">Habilidades Creativas</span>
+            <span class="skill-group-lbl">Diseño &amp; Negocio</span>
             <div class="pills">
-                <span class="pill"><span class="dot"></span>Diseño 3D</span>
-                <span class="pill"><span class="dot"></span>Edición de Video</span>
-                <span class="pill"><span class="dot"></span>Marketing de Contenidos</span>
+                <span class="pill"><span class="dot"></span>Diseño 3D (CAD)</span>
+                <span class="pill"><span class="dot"></span>Impresión 3D</span>
+                <span class="pill"><span class="dot"></span>E-commerce</span>
                 <span class="pill"><span class="dot"></span>UI / UX</span>
+                <span class="pill"><span class="dot"></span>Documentación técnica</span>
             </div>
         </div>
     </div>
@@ -805,21 +862,26 @@
             <p class="reveal rd2">Haz clic en una tarjeta para ver más detalles</p>
         </div>
         <div class="proj-grid">
-            <div class="pcard reveal" onclick="openPM(0)">
+
+            <!-- Madesa - EN DESARROLLO -->
+            <div class="pcard reveal" onclick="openPM(0)" style="border-color:rgba(236,14,107,.25);">
                 <div class="pcard-imgwrap">
-                    <img src="images/caballero negro.jpg" alt="Caballero Negro" class="pcard-img">
-                    <span class="pcard-tag">IA &amp; Bots</span>
+                    <img src="images/madesa.jpg" alt="Sistema Madesa" class="pcard-img"
+                         onerror="this.style.background='linear-gradient(135deg,#1a0a0f,#2d0d1a)';this.style.height='200px';this.removeAttribute('src')">
+                    <span class="pcard-tag">Sistema Web</span>
+                    <span class="pcard-status">En desarrollo</span>
                 </div>
                 <div class="pcard-body">
-                    <h3>Bot "Caballero Negro"</h3>
-                    <div class="pcard-role">Desarrollador de IA · Diseñador Narrativo</div>
-                    <p>Bot conversacional avanzado con Google Gemini API, personalidad persistente y memoria contextual adaptable por usuario.</p>
+                    <h3>Plataforma Web — Madesa</h3>
+                    <div class="pcard-role">Programador · Arquitecto de Software</div>
+                    <p>Sistema web integral de facturación, cotización y ventas para la PYME Madesa. Arquitectura full-stack con gestión de catálogo, generación de facturas y página de ventas.</p>
                     <div class="pcard-actions">
-                        <button class="btn-p" onclick="event.stopPropagation(); openAI('Caballero Negro Bot')">✨ IA</button>
                         <button class="btn-s" onclick="event.stopPropagation(); openPM(0)">Ver más →</button>
                     </div>
                 </div>
             </div>
+
+            <!-- SNTSS -->
             <div class="pcard reveal rd1" onclick="openPM(1)">
                 <div class="pcard-imgwrap">
                     <img src="images/sindicato.jpg" alt="SNTSS" class="pcard-img">
@@ -830,11 +892,12 @@
                     <div class="pcard-role">Desarrollador Full-Stack</div>
                     <p>App de escritorio en Python con base de datos SQL cifrada, gestión segura de personal y dashboard con exportación a Excel.</p>
                     <div class="pcard-actions">
-                        <button class="btn-p" onclick="event.stopPropagation(); openAI('Sistema de Gestión SNTSS')">✨ IA</button>
                         <button class="btn-s" onclick="event.stopPropagation(); openPM(1)">Ver más →</button>
                     </div>
                 </div>
             </div>
+
+            <!-- Axis 3D -->
             <div class="pcard reveal rd2" onclick="openPM(2)">
                 <div class="pcard-imgwrap">
                     <img src="images/axis3d.jpg" alt="Tienda 3D" class="pcard-img">
@@ -843,13 +906,29 @@
                 <div class="pcard-body">
                     <h3>Tienda 3D — Axis</h3>
                     <div class="pcard-role">Fundador · Fabricante Digital</div>
-                    <p>Emprendimiento personal: diseño 3D propio, manufactura digital, marketing y ventas online end-to-end.</p>
+                    <p>Emprendimiento personal: diseño CAD propio, manufactura digital, marketing y ventas online end-to-end.</p>
                     <div class="pcard-actions">
-                        <button class="btn-p" onclick="event.stopPropagation(); openAI('Tienda E-commerce de Impresiones 3D')">✨ IA</button>
                         <button class="btn-s" onclick="event.stopPropagation(); openPM(2)">Ver más →</button>
                     </div>
                 </div>
             </div>
+
+            <!-- Caballero Negro -->
+            <div class="pcard reveal rd3" onclick="openPM(3)">
+                <div class="pcard-imgwrap">
+                    <img src="images/caballero negro.jpg" alt="Caballero Negro" class="pcard-img">
+                    <span class="pcard-tag">Bots &amp; Scripting</span>
+                </div>
+                <div class="pcard-body">
+                    <h3>Bot "Caballero Negro"</h3>
+                    <div class="pcard-role">Desarrollador · Diseñador Narrativo</div>
+                    <p>Bot conversacional avanzado con personalidad persistente, memoria contextual y diseño de interacción adaptable por usuario en Discord.</p>
+                    <div class="pcard-actions">
+                        <button class="btn-s" onclick="event.stopPropagation(); openPM(3)">Ver más →</button>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </section>
@@ -861,30 +940,52 @@
             <div class="contact-hd">
                 <p class="section-label reveal">Contacto</p>
                 <h2 class="section-title reveal rd1">Hablemos <span class="text-gradient">juntos</span></h2>
-                <p class="reveal rd2">Estoy abierto a nuevas oportunidades y colaboraciones.</p>
+                <p class="reveal rd2">Disponibilidad inmediata. Abierto a nuevas oportunidades y colaboraciones.</p>
             </div>
             <div class="contact-box reveal rd2">
-                <p class="ice-lbl">¿No sabes cómo empezar?</p>
-                <div class="ice-row">
-                    <input id="iceInput" type="text" class="input" placeholder="Escribe un tema (ej: videojuegos)">
-                    <button id="iceBtn" class="btn-p">✨ Rompe el hielo</button>
-                </div>
-                <div class="contact-actions">
-                    <a href="mailto:daniel1234edgar@gmail.com" class="btn-p">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+
+                <!-- Teléfono -->
+                <a href="tel:+526491046471" class="phone-row" style="text-decoration:none;">
+                    <div class="phone-icon">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
                         </svg>
-                        Enviar Correo
-                    </a>
+                    </div>
+                    <div class="phone-info">
+                        <div class="phone-lbl">Teléfono / WhatsApp</div>
+                        <div class="phone-num">+52 649 104 6471</div>
+                    </div>
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:var(--ts);flex-shrink:0;">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </a>
+
+                <div class="contact-actions">
+                    <span class="contact-actions-lbl">Redes sociales</span>
                     <div class="social-row">
-                        <a href="https://twitter.com/BestiaCriper" target="_blank" rel="noopener" class="social-btn" aria-label="Twitter">
-                            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.71v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"/></svg>
+                        <!-- Twitter / X -->
+                        <a href="https://twitter.com/BestiaCriper" target="_blank" rel="noopener" class="social-btn" aria-label="Twitter / X">
+                            <svg fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.71v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"/>
+                            </svg>
                         </a>
+                        <!-- Instagram -->
                         <a href="https://www.instagram.com/daniel._.nev/" target="_blank" rel="noopener" class="social-btn" aria-label="Instagram">
-                            <svg fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.024.06 1.378.06 3.808s-.012 2.784-.06 3.808c-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.024.048-1.378.06-3.808.06s-2.784-.013-3.808-.06c-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427C2.013 14.53 2 14.176 2 12s.013-2.784.06-3.808c.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clip-rule="evenodd"/></svg>
+                            <svg fill="currentColor" viewBox="0 0 24 24">
+                                <path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.024.06 1.378.06 3.808s-.012 2.784-.06 3.808c-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.024.048-1.378.06-3.808.06s-2.784-.013-3.808-.06c-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427C2.013 14.53 2 14.176 2 12s.013-2.784.06-3.808c.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clip-rule="evenodd"/>
+                            </svg>
                         </a>
+                        <!-- LinkedIn -->
                         <a href="https://www.linkedin.com/in/edgar-daniel-chaparro-nev%C3%A1rez-209936347/" target="_blank" rel="noopener" class="social-btn" aria-label="LinkedIn">
-                            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                            <svg fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                            </svg>
+                        </a>
+                        <!-- GitHub -->
+                        <a href="https://github.com/" target="_blank" rel="noopener" class="social-btn" aria-label="GitHub">
+                            <svg fill="currentColor" viewBox="0 0 24 24">
+                                <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"/>
+                            </svg>
                         </a>
                     </div>
                 </div>
@@ -910,234 +1011,260 @@
         </div>
         <div class="pm-body">
             <span class="pm-tag" id="pmTag"></span>
-            <h2 id="pmTitle" style="font-size:1.75rem;font-weight:800;margin-bottom:6px;"></h2>
+            <h2 id="pmTitle" style="font-size:clamp(1.3rem,4vw,1.75rem);font-weight:800;margin-bottom:6px;"></h2>
             <p id="pmRole" style="color:var(--accent);font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px;"></p>
+            <p id="pmPeriod" style="color:var(--ts);font-size:.82rem;margin-bottom:14px;display:flex;align-items:center;gap:6px;"></p>
             <p id="pmDesc" style="color:var(--ts);line-height:1.85;margin-bottom:24px;"></p>
             <div id="pmTech" class="pm-tech"></div>
-            <button id="pmAiBtn" class="btn-p">✨ Analizar con IA</button>
-            <div id="pmAiResult" class="aic ai-sep hidden"></div>
         </div>
-    </div>
-</div>
-
-<!-- ══ AI MODAL ══ -->
-<div class="ai-overlay" id="aiOverlay">
-    <div class="ai-box" id="aiBox">
-        <button class="m-close" id="aiClose" style="position:absolute;top:16px;right:16px;">✕</button>
-        <h3 id="aiTitle" class="text-gradient">Generando...</h3>
-        <div id="aiBody"><div class="loader"></div></div>
     </div>
 </div>
 
 <script>
-/* DATA */
+/* ══ DATA ══ */
 const projects = [
     {
-        title:'Bot de Discord "Caballero Negro"',
-        role:'Desarrollador de IA · Diseñador Narrativo',
-        tag:'IA & Bots',
-        img:'images/caballero negro.jpg',
-        desc:'Bot conversacional avanzado usando Google Gemini API con personalidad persistente, memoria contextual y diseño de interacción adaptable por usuario. Sostiene conversaciones profundas y adapta su tono narrativo.',
-        tech:['Python','Discord.py','Google Gemini API','Ingeniería de Prompts','Memoria Contextual'],
-        key:'Caballero Negro Bot — Discord bot con IA conversacional usando Google Gemini'
+        title: 'Plataforma Web — Madesa',
+        role: 'Programador · Arquitecto de Software',
+        tag: 'Sistema Web',
+        period: '📅 Enero 2026 – Mayo 2026 · En desarrollo activo',
+        img: 'images/madesa.jpg',
+        desc: 'Sistema web integral desarrollado durante la Residencia Profesional para la PYME Madesa. Incluye módulo de facturación electrónica, cotizaciones personalizadas, catálogo de productos y una página de ventas orientada al cliente final. Se definió la arquitectura lógica, desarrollaron soluciones backend para la eficiencia operativa y se elaboró documentación técnica completa con diagramas estructurales y manuales de usuario.',
+        tech: ['JavaScript', 'HTML / CSS', 'Backend Web', 'Facturación', 'Cotizaciones', 'E-commerce', 'Documentación técnica', 'Arquitectura de sistemas']
     },
     {
-        title:'Sistema de Gestión SNTSS',
-        role:'Desarrollador Full-Stack',
-        tag:'Empresarial',
-        img:'images/sindicato.jpg',
-        desc:'App de escritorio en Python para el SNTSS con SQL cifrado, gestión segura de personal, dashboard de métricas en tiempo real y exportación a Excel. Proyecto de ciclo completo.',
-        tech:['Python','SQL cifrado','.NET','Dashboard de métricas','Excel export'],
-        key:'Sistema de Gestión SNTSS — App empresarial Python con SQL cifrado'
+        title: 'Sistema de Gestión SNTSS',
+        role: 'Desarrollador Full-Stack',
+        tag: 'Empresarial',
+        period: '📅 Junio 2025 – Diciembre 2025',
+        img: 'images/sindicato.jpg',
+        desc: 'Aplicación de escritorio en Python para el Sindicato Nacional de Trabajadores del Seguro Social (SNTSS). Implementa una base de datos SQL cifrada para proteger información sensible de los trabajadores, automatización de reportes exportados a Excel —reduciendo errores manuales significativamente— y optimización de la logística interna y los procesos de toma de decisiones del sindicato.',
+        tech: ['Python', 'SQL cifrado', 'SQLite', '.NET', 'Excel automatizado', 'Dashboard de métricas', 'Seguridad de datos']
     },
     {
-        title:'Tienda 3D — Axis',
-        role:'Fundador · Fabricante Digital',
-        tag:'E-commerce',
-        img:'images/axis3d.jpg',
-        desc:'Emprendimiento personal: diseño CAD propio, manufactura digital, marketing en redes y ventas online. Gestión end-to-end del ciclo de producto.',
-        tech:['Diseño 3D CAD','Manufactura digital','Marketing digital','E-commerce','Itch.io'],
-        key:'Tienda E-commerce de Impresiones 3D — emprendimiento diseño 3D'
+        title: 'Tienda 3D — Axis',
+        role: 'Fundador · Director General · Fabricante Digital',
+        tag: 'E-commerce',
+        period: '📅 Febrero 2025 – Agosto 2025',
+        img: 'images/axis3d.jpg',
+        desc: 'Emprendimiento personal que transformó un proyecto académico en un negocio funcional y rentable. Lideré la visión estratégica y la gestión integral del ciclo completo del producto: desde el diseño CAD y la impresión 3D, hasta la administración de la plataforma de e-commerce, operaciones de logística y marketing digital.',
+        tech: ['Diseño 3D (CAD)', 'Manufactura digital', 'Impresión 3D', 'E-commerce', 'Marketing digital', 'Logística', 'Gestión de producto']
+    },
+    {
+        title: 'Bot "Caballero Negro"',
+        role: 'Desarrollador · Diseñador Narrativo',
+        tag: 'Bots & Scripting',
+        period: '📅 Proyecto personal',
+        img: 'images/caballero negro.jpg',
+        desc: 'Bot conversacional avanzado para Discord con personalidad persistente y memoria contextual adaptable por usuario. Diseñado con ingeniería de prompts para sostener conversaciones profundas con un tono narrativo coherente. Integra lógica de interacción adaptable según el contexto y el historial de cada usuario.',
+        tech: ['Python', 'Discord.py', 'Ingeniería de Prompts', 'Memoria contextual', 'Diseño conversacional', 'APIs externas']
     }
 ];
 
-/* PROJECT MODAL */
+/* ══ PROJECT MODAL ══ */
 function openPM(i) {
     const p = projects[i];
-    document.getElementById('pmImg').src = p.img;
-    document.getElementById('pmTag').textContent = p.tag;
-    document.getElementById('pmTitle').textContent = p.title;
-    document.getElementById('pmRole').textContent = p.role;
-    document.getElementById('pmDesc').textContent = p.desc;
-    document.getElementById('pmTech').innerHTML =
-        p.tech.map(t=>`<span class="pill" style="font-size:.78rem;"><span class="dot"></span>${t}</span>`).join('');
-    const r = document.getElementById('pmAiResult');
-    r.classList.add('hidden'); r.innerHTML='';
-    document.getElementById('pmAiBtn').onclick = () => { closePM(); openAI(p.key); };
-    document.getElementById('pmOverlay').classList.add('open');
-    document.body.style.overflow='hidden';
-}
-function closePM() {
-    document.getElementById('pmOverlay').classList.remove('open');
-    document.body.style.overflow='';
-}
-document.getElementById('pmOverlay').addEventListener('click', e => {
-    if(e.target===document.getElementById('pmOverlay')) closePM();
-});
-document.getElementById('pmClose').addEventListener('click', closePM);
 
-/* AI MODAL */
-let pendingPrj = null;
-function openAI(name) {
-    pendingPrj = name;
-    document.getElementById('aiTitle').textContent='✨ Antes de analizar...';
-    document.getElementById('aiBody').innerHTML=`
-        <p style="color:var(--ts);line-height:1.7;margin-bottom:16px;">
-            Para personalizar el análisis de <strong style="color:var(--tp);">${name}</strong>, ¿a qué te dedicas?
-        </p>
-        <div style="display:flex;gap:8px;margin-bottom:12px;">
-            <input id="roleInput" type="text" class="input" placeholder="Ej: reclutador, developer, estudiante..." style="flex:1;">
-            <button onclick="doAI()" class="btn-p">Analizar →</button>
-        </div>
-        <div style="display:flex;flex-wrap:wrap;gap:8px;">
-            <button onclick="qRole('Reclutador de tecnología')"         class="btn-s" style="font-size:.75rem;padding:6px 14px;">💼 Reclutador</button>
-            <button onclick="qRole('Desarrollador de software')"        class="btn-s" style="font-size:.75rem;padding:6px 14px;">💻 Dev</button>
-            <button onclick="qRole('Empresario buscando colaboración')" class="btn-s" style="font-size:.75rem;padding:6px 14px;">🤝 Empresa</button>
-            <button onclick="qRole('Estudiante curioso')"               class="btn-s" style="font-size:.75rem;padding:6px 14px;">🎓 Estudiante</button>
-        </div>
-    `;
-    document.getElementById('aiOverlay').classList.add('open');
-    document.body.style.overflow='hidden';
-    setTimeout(()=>document.getElementById('roleInput')?.focus(),300);
-}
-function qRole(r) { const inp=document.getElementById('roleInput'); if(inp) inp.value=r; doAI(); }
-function doAI() {
-    const role = document.getElementById('roleInput')?.value.trim()||'visitante';
-    document.getElementById('aiTitle').textContent=`✨ Analizando: ${pendingPrj}`;
-    document.getElementById('aiBody').innerHTML='<div class="loader"></div>';
-    const prompt=`Actúa como un experto en reclutamiento de tecnología. El visitante dice ser: "${role}". Personaliza para ese perfil. Describe el proyecto: "${pendingPrj}". Incluye: valor para ese perfil, habilidades, tecnologías, y termina con "¿En qué te puedo ayudar?" adaptado. Responde en español con Markdown.`;
-    callGemini(prompt).then(t=>{
-        document.getElementById('aiTitle').textContent=`✨ ${pendingPrj}`;
-        document.getElementById('aiBody').innerHTML=`<div class="aic">${md(t)}</div>`;
+    // Manejo de imagen con fallback
+    const imgEl = document.getElementById('pmImg');
+    imgEl.onerror = function() {
+        document.getElementById('pmHero').style.background =
+            'linear-gradient(135deg, #1a0a0f 0%, #2d0d1a 100%)';
+        imgEl.style.opacity = '0';
+    };
+    imgEl.src = p.img;
+
+    document.getElementById('pmTag').textContent    = p.tag;
+    document.getElementById('pmTitle').textContent  = p.title;
+    document.getElementById('pmRole').textContent   = p.role;
+    document.getElementById('pmPeriod').textContent = p.period;
+    document.getElementById('pmDesc').textContent   = p.desc;
+    document.getElementById('pmTech').innerHTML =
+        p.tech.map(t => `<span class="pill" style="font-size:.78rem;"><span class="dot"></span>${t}</span>`).join('');
+
+    document.getElementById('pmOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+
+    // Anime.js: entrada del modal
+    anime({
+        targets: '#pmBox',
+        scale: [0.9, 1],
+        opacity: [0, 1],
+        translateY: [30, 0],
+        duration: 400,
+        easing: 'easeOutCubic'
     });
 }
-function closeAI() {
-    document.getElementById('aiOverlay').classList.remove('open');
-    document.body.style.overflow='';
+
+function closePM() {
+    document.getElementById('pmOverlay').classList.remove('open');
+    document.body.style.overflow = '';
 }
-document.getElementById('aiOverlay').addEventListener('click',e=>{
-    if(e.target===document.getElementById('aiOverlay')) closeAI();
+document.getElementById('pmOverlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('pmOverlay')) closePM();
 });
-document.getElementById('aiClose').addEventListener('click', closeAI);
+document.getElementById('pmClose').addEventListener('click', closePM);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePM(); });
 
-/* ICEBREAKER */
-document.getElementById('iceBtn').addEventListener('click', async ()=>{
-    const t=document.getElementById('iceInput').value.trim();
-    if(!t) return;
-    document.getElementById('aiTitle').textContent=`✨ Rompehielos: ${t}`;
-    document.getElementById('aiBody').innerHTML='<div class="loader"></div>';
-    document.getElementById('aiOverlay').classList.add('open');
-    document.body.style.overflow='hidden';
-    const txt=await callGemini(`Eres un creativo iniciador de conversaciones. Un visitante quiere hablar sobre "${t}". Genera una pregunta interesante o dato curioso para romper el hielo. Breve, memorable, divertido. En español.`);
-    document.getElementById('aiBody').innerHTML=`<p style="font-size:1.05rem;line-height:1.8;color:var(--ts);">${txt}</p>`;
-    document.getElementById('iceInput').value='';
-});
+/* ══ SCROLL REVEAL ══ */
+const obs = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) e.target.classList.add('visible');
+}), { threshold: .1 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
-/* GEMINI */
-async function callGemini(prompt,retries=3,delay=1000){
-    const key="AIzaSyAv-7wlkNjGQvPj0DCp6WnukcOvv1YV7WU";
-    const url=`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${key}`;
-    try{
-        const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({contents:[{role:'user',parts:[{text:prompt}]}]})});
-        if(!r.ok){
-            if(r.status===429&&retries>0){await sleep(delay);return callGemini(prompt,retries-1,delay*2);}
-            throw new Error(r.status);
+/* ══ COUNTER ANIMATION (stats) ══ */
+const counterObs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const el = entry.target;
+            const target = +el.dataset.count;
+            anime({
+                targets: el,
+                innerHTML: [0, target],
+                round: 1,
+                duration: 1200,
+                easing: 'easeOutExpo'
+            });
+            counterObs.unobserve(el);
         }
-        const d=await r.json();
-        return d.candidates?.[0]?.content?.parts?.[0]?.text||'Sin respuesta.';
-    }catch(e){
-        if(retries>0){await sleep(delay);return callGemini(prompt,retries-1,delay*2);}
-        return 'Error al contactar la IA.';
-    }
-}
-function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
-function md(s){
-    return s
-        .replace(/## (.*)/g,'<h2>$1</h2>')
-        .replace(/### (.*)/g,'<h3>$1</h3>')
-        .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
-        .replace(/\*(.*?)\*/g,'<em>$1</em>')
-        .replace(/^- (.*)/gm,'<li>$1</li>')
-        .replace(/(<li>.*?<\/li>)/gs,'<ul>$1</ul>')
-        .replace(/\n\n/g,'</p><p>')
-        .replace(/^(?!<[hpul])/gm,'<p>')
-        .replace(/<p><\/p>/g,'');
-}
+    });
+}, { threshold: .5 });
+document.querySelectorAll('[data-count]').forEach(el => counterObs.observe(el));
 
-/* GLOBAL HANDLERS (inline onclick) */
-window.openPM=openPM; window.openAI=openAI;
-window.qRole=qRole;   window.doAI=doAI;
-
-/* SCROLL REVEAL */
-const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:.12});
-document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
-
-/* HEADER */
-const hdr=document.getElementById('header');
-window.addEventListener('scroll',()=>{
-    hdr.classList.toggle('scrolled',scrollY>40);
-    const sy=scrollY+120;
-    ['about','skills','projects','contact'].forEach(id=>{
-        const s=document.getElementById(id);
-        const l=document.querySelector(`.nav-link[href="#${id}"]`);
-        if(!s||!l)return;
-        if(sy>=s.offsetTop&&sy<s.offsetTop+s.offsetHeight){
-            document.querySelectorAll('.nav-link').forEach(x=>x.classList.remove('active'));
+/* ══ HEADER ══ */
+const hdr = document.getElementById('header');
+window.addEventListener('scroll', () => {
+    hdr.classList.toggle('scrolled', scrollY > 40);
+    const sy = scrollY + 120;
+    ['about','skills','projects','contact'].forEach(id => {
+        const s = document.getElementById(id);
+        const l = document.querySelector(`.nav-link[href="#${id}"]`);
+        if (!s || !l) return;
+        if (sy >= s.offsetTop && sy < s.offsetTop + s.offsetHeight) {
+            document.querySelectorAll('.nav-link').forEach(x => x.classList.remove('active'));
             l.classList.add('active');
         }
     });
-},{passive:true});
+}, { passive: true });
 
-/* MOBILE MENU */
-const mm=document.getElementById('mobile-menu');
-document.getElementById('menuBtn').addEventListener('click',()=>mm.classList.toggle('open'));
-mm.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>mm.classList.remove('open')));
+/* ══ MOBILE MENU ══ */
+const mm = document.getElementById('mobile-menu');
+document.getElementById('menuBtn').addEventListener('click', () => mm.classList.toggle('open'));
+mm.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mm.classList.remove('open')));
 
-/* CURSOR */
-const dot=document.getElementById('cursorDot'),ring=document.getElementById('cursorRing');
-let mx=0,my=0,rx=0,ry=0;
-document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';},{passive:true});
-(function ac(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(ac);})();
-document.querySelectorAll('a,button,.pcard,.pill').forEach(el=>{
-    el.addEventListener('mouseenter',()=>{ring.style.width='56px';ring.style.height='56px';ring.style.opacity='1';});
-    el.addEventListener('mouseleave',()=>{ring.style.width='36px';ring.style.height='36px';ring.style.opacity='.6';});
+/* ══ CURSOR (solo desktop) ══ */
+const dot  = document.getElementById('cursorDot');
+const ring = document.getElementById('cursorRing');
+if (dot && ring && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => {
+        mx = e.clientX; my = e.clientY;
+        dot.style.left = mx + 'px';
+        dot.style.top  = my + 'px';
+    }, { passive: true });
+    (function ac() {
+        rx += (mx - rx) * .12;
+        ry += (my - ry) * .12;
+        ring.style.left = rx + 'px';
+        ring.style.top  = ry + 'px';
+        requestAnimationFrame(ac);
+    })();
+    document.querySelectorAll('a, button, .pcard, .pill, .phone-row').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            ring.style.width  = '56px';
+            ring.style.height = '56px';
+            ring.style.opacity = '1';
+        });
+        el.addEventListener('mouseleave', () => {
+            ring.style.width  = '36px';
+            ring.style.height = '36px';
+            ring.style.opacity = '.6';
+        });
+    });
+}
+
+/* ══ PARTICLES ══ */
+(function () {
+    const cv = document.getElementById('particles');
+    const ctx = cv.getContext('2d');
+    let W, H;
+    const pts = [];
+    const N = window.innerWidth < 768 ? 30 : 60;
+
+    function resize() { W = cv.width = innerWidth; H = cv.height = innerHeight; }
+    window.addEventListener('resize', resize, { passive: true });
+    resize();
+
+    for (let i = 0; i < N; i++) pts.push({
+        x: Math.random() * W, y: Math.random() * H,
+        vx: (Math.random() - .5) * .3, vy: (Math.random() - .5) * .3,
+        r: Math.random() * 1.5 + .3, a: Math.random() * .4 + .1
+    });
+
+    function draw() {
+        ctx.clearRect(0, 0, W, H);
+        pts.forEach((p, i) => {
+            p.x += p.vx; p.y += p.vy;
+            if (p.x < 0 || p.x > W) p.vx *= -1;
+            if (p.y < 0 || p.y > H) p.vy *= -1;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(236,14,107,${p.a})`;
+            ctx.fill();
+            for (let j = i + 1; j < pts.length; j++) {
+                const q = pts[j];
+                const dx = p.x - q.x, dy = p.y - q.y;
+                const d  = Math.sqrt(dx * dx + dy * dy);
+                if (d < 120) {
+                    ctx.beginPath();
+                    ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y);
+                    ctx.strokeStyle = `rgba(236,14,107,${.06 * (1 - d / 120)})`;
+                    ctx.lineWidth = .5;
+                    ctx.stroke();
+                }
+            }
+        });
+        requestAnimationFrame(draw);
+    }
+    draw();
+})();
+
+/* ══ HERO ANIMATIONS (anime.js) ══ */
+window.addEventListener('load', () => {
+    // Avatar
+    anime({
+        targets: '#heroAvatar',
+        opacity: [0, 1],
+        scale: [.7, 1],
+        duration: 900,
+        delay: 300,
+        easing: 'easeOutElastic(1, .7)'
+    });
+
+    // Líneas de texto
+    const lines = ['#hl1','#hl2','#hl3','#hl4'];
+    anime({
+        targets: lines,
+        opacity: [0, 1],
+        translateY: [40, 0],
+        duration: 800,
+        delay: anime.stagger(140, { start: 500 }),
+        easing: 'easeOutCubic'
+    });
+
+    // Pills stagger on hover sections (initial entrance)
+    anime({
+        targets: '.pill',
+        opacity: [0, 1],
+        translateX: [-12, 0],
+        duration: 500,
+        delay: anime.stagger(30, { start: 800 }),
+        easing: 'easeOutQuad'
+    });
 });
 
-/* PARTICLES */
-(function(){
-    const cv=document.getElementById('particles'),ctx=cv.getContext('2d');
-    let W,H;const pts=[];const N=60;
-    function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight;}
-    window.addEventListener('resize',resize,{passive:true});resize();
-    for(let i=0;i<N;i++)pts.push({x:Math.random()*W,y:Math.random()*H,
-        vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,
-        r:Math.random()*1.5+.3,a:Math.random()*.4+.1});
-    function draw(){
-        ctx.clearRect(0,0,W,H);
-        pts.forEach((p,i)=>{
-            p.x+=p.vx;p.y+=p.vy;
-            if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;
-            ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-            ctx.fillStyle=`rgba(236,14,107,${p.a})`;ctx.fill();
-            for(let j=i+1;j<pts.length;j++){
-                const q=pts[j],dx=p.x-q.x,dy=p.y-q.y,d=Math.sqrt(dx*dx+dy*dy);
-                if(d<120){ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);
-                    ctx.strokeStyle=`rgba(236,14,107,${.06*(1-d/120)})`;ctx.lineWidth=.5;ctx.stroke();}
-            }
-        });requestAnimationFrame(draw);
-    }draw();
-})();
+/* ══ EXPOSE GLOBALS ══ */
+window.openPM = openPM;
 </script>
 </body>
 </html>
